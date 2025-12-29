@@ -57,7 +57,7 @@ model AvailableTriggerNodes {
 model ActionNodes {
   id                   String               @id @default(uuid())
   workflow             WorkFlow             @relation(fields: [workflowId], references: [id])
-  workflowId           String               @unique
+  workflowId           String
   availableActionNodes AvailableActionNodes @relation(fields: [ActionNodeId], references: [id])
   ActionNodeId         String
 }

@@ -10394,14 +10394,14 @@ export namespace Prisma {
 
   export type ActionNodesWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    workflowId?: string
     AND?: ActionNodesWhereInput | ActionNodesWhereInput[]
     OR?: ActionNodesWhereInput[]
     NOT?: ActionNodesWhereInput | ActionNodesWhereInput[]
+    workflowId?: StringFilter<"ActionNodes"> | string
     ActionNodeId?: StringFilter<"ActionNodes"> | string
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
     availableActionNodes?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
-  }, "id" | "workflowId">
+  }, "id">
 
   export type ActionNodesOrderByWithAggregationInput = {
     id?: SortOrder
