@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sessions  Session[]
+}
+
+model Session {
+  sid    String   @id
+  userId String
+  expire DateTime @default(now())
+  user   User     @relation(fields: [userId], references: [id])
+
+  @@index([expire])
+}
+
+model WorkFlow {
+  id           String        @id @default(uuid())
+  triggerNodes TriggerNodes?
+  actionsNodes ActionNodes[]
+  workflowRun  WorkFlowRun[]
+}
+
+model TriggerNodes {
+  id                    String                @id @default(uuid())
+  workflow              WorkFlow              @relation(fields: [workflowId], references: [id])
+  workflowId            String                @unique
+  availableTriggerNodes AvailableTriggerNodes @relation(fields: [TriggerNodeId], references: [id])
+  TriggerNodeId         String
+}
+
+model AvailableTriggerNodes {
+  id          String         @id @default(uuid())
+  name        String
+  TriggerNode TriggerNodes[]
+}
+
+model ActionNodes {
+  id                   String               @id @default(uuid())
+  workflow             WorkFlow             @relation(fields: [workflowId], references: [id])
+  workflowId           String               @unique
+  availableActionNodes AvailableActionNodes @relation(fields: [ActionNodeId], references: [id])
+  ActionNodeId         String
+}
+
+model AvailableActionNodes {
+  id          String        @id @default(uuid())
+  name        String
+  actionNodes ActionNodes[]
+}
+
+model WorkFlowRun {
+  id         String          @id @default(uuid())
+  workflow   WorkFlow        @relation(fields: [workflowId], references: [id])
+  workflowId String
+  meta       Json
+  outbox     WorkFlowOutBox?
+}
+
+model WorkFlowOutBox {
+  id             String      @id @default(uuid())
+  outboxId       String      @unique
+  workflowOutBox WorkFlowRun @relation(fields: [outboxId], references: [id])
+}
