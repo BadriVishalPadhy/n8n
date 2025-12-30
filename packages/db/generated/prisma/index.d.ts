@@ -6307,46 +6307,70 @@ export namespace Prisma {
 
   export type AggregateActionNodes = {
     _count: ActionNodesCountAggregateOutputType | null
+    _avg: ActionNodesAvgAggregateOutputType | null
+    _sum: ActionNodesSumAggregateOutputType | null
     _min: ActionNodesMinAggregateOutputType | null
     _max: ActionNodesMaxAggregateOutputType | null
+  }
+
+  export type ActionNodesAvgAggregateOutputType = {
+    sortingOrder: number | null
+  }
+
+  export type ActionNodesSumAggregateOutputType = {
+    sortingOrder: number | null
   }
 
   export type ActionNodesMinAggregateOutputType = {
     id: string | null
     workflowId: string | null
     ActionNodeId: string | null
+    sortingOrder: number | null
   }
 
   export type ActionNodesMaxAggregateOutputType = {
     id: string | null
     workflowId: string | null
     ActionNodeId: string | null
+    sortingOrder: number | null
   }
 
   export type ActionNodesCountAggregateOutputType = {
     id: number
     workflowId: number
     ActionNodeId: number
+    sortingOrder: number
     _all: number
   }
 
+
+  export type ActionNodesAvgAggregateInputType = {
+    sortingOrder?: true
+  }
+
+  export type ActionNodesSumAggregateInputType = {
+    sortingOrder?: true
+  }
 
   export type ActionNodesMinAggregateInputType = {
     id?: true
     workflowId?: true
     ActionNodeId?: true
+    sortingOrder?: true
   }
 
   export type ActionNodesMaxAggregateInputType = {
     id?: true
     workflowId?: true
     ActionNodeId?: true
+    sortingOrder?: true
   }
 
   export type ActionNodesCountAggregateInputType = {
     id?: true
     workflowId?: true
     ActionNodeId?: true
+    sortingOrder?: true
     _all?: true
   }
 
@@ -6388,6 +6412,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ActionNodesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ActionNodesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ActionNodesMinAggregateInputType
@@ -6418,6 +6454,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ActionNodesCountAggregateInputType | true
+    _avg?: ActionNodesAvgAggregateInputType
+    _sum?: ActionNodesSumAggregateInputType
     _min?: ActionNodesMinAggregateInputType
     _max?: ActionNodesMaxAggregateInputType
   }
@@ -6426,7 +6464,10 @@ export namespace Prisma {
     id: string
     workflowId: string
     ActionNodeId: string
+    sortingOrder: number
     _count: ActionNodesCountAggregateOutputType | null
+    _avg: ActionNodesAvgAggregateOutputType | null
+    _sum: ActionNodesSumAggregateOutputType | null
     _min: ActionNodesMinAggregateOutputType | null
     _max: ActionNodesMaxAggregateOutputType | null
   }
@@ -6449,6 +6490,7 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     ActionNodeId?: boolean
+    sortingOrder?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
     availableActionNodes?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["actionNodes"]>
@@ -6457,6 +6499,7 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     ActionNodeId?: boolean
+    sortingOrder?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
     availableActionNodes?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["actionNodes"]>
@@ -6465,6 +6508,7 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     ActionNodeId?: boolean
+    sortingOrder?: boolean
   }
 
   export type ActionNodesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6486,6 +6530,7 @@ export namespace Prisma {
       id: string
       workflowId: string
       ActionNodeId: string
+      sortingOrder: number
     }, ExtArgs["result"]["actionNodes"]>
     composites: {}
   }
@@ -6884,6 +6929,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ActionNodes", 'String'>
     readonly workflowId: FieldRef<"ActionNodes", 'String'>
     readonly ActionNodeId: FieldRef<"ActionNodes", 'String'>
+    readonly sortingOrder: FieldRef<"ActionNodes", 'Int'>
   }
     
 
@@ -9064,34 +9110,34 @@ export namespace Prisma {
 
   export type WorkFlowOutBoxMinAggregateOutputType = {
     id: string | null
-    outboxId: string | null
+    WorkFlowRunId: string | null
   }
 
   export type WorkFlowOutBoxMaxAggregateOutputType = {
     id: string | null
-    outboxId: string | null
+    WorkFlowRunId: string | null
   }
 
   export type WorkFlowOutBoxCountAggregateOutputType = {
     id: number
-    outboxId: number
+    WorkFlowRunId: number
     _all: number
   }
 
 
   export type WorkFlowOutBoxMinAggregateInputType = {
     id?: true
-    outboxId?: true
+    WorkFlowRunId?: true
   }
 
   export type WorkFlowOutBoxMaxAggregateInputType = {
     id?: true
-    outboxId?: true
+    WorkFlowRunId?: true
   }
 
   export type WorkFlowOutBoxCountAggregateInputType = {
     id?: true
-    outboxId?: true
+    WorkFlowRunId?: true
     _all?: true
   }
 
@@ -9169,7 +9215,7 @@ export namespace Prisma {
 
   export type WorkFlowOutBoxGroupByOutputType = {
     id: string
-    outboxId: string
+    WorkFlowRunId: string
     _count: WorkFlowOutBoxCountAggregateOutputType | null
     _min: WorkFlowOutBoxMinAggregateOutputType | null
     _max: WorkFlowOutBoxMaxAggregateOutputType | null
@@ -9191,36 +9237,36 @@ export namespace Prisma {
 
   export type WorkFlowOutBoxSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    outboxId?: boolean
-    workflowOutBox?: boolean | WorkFlowRunDefaultArgs<ExtArgs>
+    WorkFlowRunId?: boolean
+    workFlowRun?: boolean | WorkFlowRunDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workFlowOutBox"]>
 
   export type WorkFlowOutBoxSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    outboxId?: boolean
-    workflowOutBox?: boolean | WorkFlowRunDefaultArgs<ExtArgs>
+    WorkFlowRunId?: boolean
+    workFlowRun?: boolean | WorkFlowRunDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workFlowOutBox"]>
 
   export type WorkFlowOutBoxSelectScalar = {
     id?: boolean
-    outboxId?: boolean
+    WorkFlowRunId?: boolean
   }
 
   export type WorkFlowOutBoxInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    workflowOutBox?: boolean | WorkFlowRunDefaultArgs<ExtArgs>
+    workFlowRun?: boolean | WorkFlowRunDefaultArgs<ExtArgs>
   }
   export type WorkFlowOutBoxIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    workflowOutBox?: boolean | WorkFlowRunDefaultArgs<ExtArgs>
+    workFlowRun?: boolean | WorkFlowRunDefaultArgs<ExtArgs>
   }
 
   export type $WorkFlowOutBoxPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "WorkFlowOutBox"
     objects: {
-      workflowOutBox: Prisma.$WorkFlowRunPayload<ExtArgs>
+      workFlowRun: Prisma.$WorkFlowRunPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      outboxId: string
+      WorkFlowRunId: string
     }, ExtArgs["result"]["workFlowOutBox"]>
     composites: {}
   }
@@ -9585,7 +9631,7 @@ export namespace Prisma {
    */
   export interface Prisma__WorkFlowOutBoxClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    workflowOutBox<T extends WorkFlowRunDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkFlowRunDefaultArgs<ExtArgs>>): Prisma__WorkFlowRunClient<$Result.GetResult<Prisma.$WorkFlowRunPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    workFlowRun<T extends WorkFlowRunDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkFlowRunDefaultArgs<ExtArgs>>): Prisma__WorkFlowRunClient<$Result.GetResult<Prisma.$WorkFlowRunPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9616,7 +9662,7 @@ export namespace Prisma {
    */ 
   interface WorkFlowOutBoxFieldRefs {
     readonly id: FieldRef<"WorkFlowOutBox", 'String'>
-    readonly outboxId: FieldRef<"WorkFlowOutBox", 'String'>
+    readonly WorkFlowRunId: FieldRef<"WorkFlowOutBox", 'String'>
   }
     
 
@@ -10011,7 +10057,8 @@ export namespace Prisma {
   export const ActionNodesScalarFieldEnum: {
     id: 'id',
     workflowId: 'workflowId',
-    ActionNodeId: 'ActionNodeId'
+    ActionNodeId: 'ActionNodeId',
+    sortingOrder: 'sortingOrder'
   };
 
   export type ActionNodesScalarFieldEnum = (typeof ActionNodesScalarFieldEnum)[keyof typeof ActionNodesScalarFieldEnum]
@@ -10036,7 +10083,7 @@ export namespace Prisma {
 
   export const WorkFlowOutBoxScalarFieldEnum: {
     id: 'id',
-    outboxId: 'outboxId'
+    WorkFlowRunId: 'WorkFlowRunId'
   };
 
   export type WorkFlowOutBoxScalarFieldEnum = (typeof WorkFlowOutBoxScalarFieldEnum)[keyof typeof WorkFlowOutBoxScalarFieldEnum]
@@ -10116,13 +10163,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -10133,6 +10173,27 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -10380,6 +10441,7 @@ export namespace Prisma {
     id?: StringFilter<"ActionNodes"> | string
     workflowId?: StringFilter<"ActionNodes"> | string
     ActionNodeId?: StringFilter<"ActionNodes"> | string
+    sortingOrder?: IntFilter<"ActionNodes"> | number
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
     availableActionNodes?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
   }
@@ -10388,6 +10450,7 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     ActionNodeId?: SortOrder
+    sortingOrder?: SortOrder
     workflow?: WorkFlowOrderByWithRelationInput
     availableActionNodes?: AvailableActionNodesOrderByWithRelationInput
   }
@@ -10399,6 +10462,7 @@ export namespace Prisma {
     NOT?: ActionNodesWhereInput | ActionNodesWhereInput[]
     workflowId?: StringFilter<"ActionNodes"> | string
     ActionNodeId?: StringFilter<"ActionNodes"> | string
+    sortingOrder?: IntFilter<"ActionNodes"> | number
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
     availableActionNodes?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
   }, "id">
@@ -10407,9 +10471,12 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     ActionNodeId?: SortOrder
+    sortingOrder?: SortOrder
     _count?: ActionNodesCountOrderByAggregateInput
+    _avg?: ActionNodesAvgOrderByAggregateInput
     _max?: ActionNodesMaxOrderByAggregateInput
     _min?: ActionNodesMinOrderByAggregateInput
+    _sum?: ActionNodesSumOrderByAggregateInput
   }
 
   export type ActionNodesScalarWhereWithAggregatesInput = {
@@ -10419,6 +10486,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ActionNodes"> | string
     workflowId?: StringWithAggregatesFilter<"ActionNodes"> | string
     ActionNodeId?: StringWithAggregatesFilter<"ActionNodes"> | string
+    sortingOrder?: IntWithAggregatesFilter<"ActionNodes"> | number
   }
 
   export type AvailableActionNodesWhereInput = {
@@ -10514,28 +10582,28 @@ export namespace Prisma {
     OR?: WorkFlowOutBoxWhereInput[]
     NOT?: WorkFlowOutBoxWhereInput | WorkFlowOutBoxWhereInput[]
     id?: StringFilter<"WorkFlowOutBox"> | string
-    outboxId?: StringFilter<"WorkFlowOutBox"> | string
-    workflowOutBox?: XOR<WorkFlowRunScalarRelationFilter, WorkFlowRunWhereInput>
+    WorkFlowRunId?: StringFilter<"WorkFlowOutBox"> | string
+    workFlowRun?: XOR<WorkFlowRunScalarRelationFilter, WorkFlowRunWhereInput>
   }
 
   export type WorkFlowOutBoxOrderByWithRelationInput = {
     id?: SortOrder
-    outboxId?: SortOrder
-    workflowOutBox?: WorkFlowRunOrderByWithRelationInput
+    WorkFlowRunId?: SortOrder
+    workFlowRun?: WorkFlowRunOrderByWithRelationInput
   }
 
   export type WorkFlowOutBoxWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    outboxId?: string
+    WorkFlowRunId?: string
     AND?: WorkFlowOutBoxWhereInput | WorkFlowOutBoxWhereInput[]
     OR?: WorkFlowOutBoxWhereInput[]
     NOT?: WorkFlowOutBoxWhereInput | WorkFlowOutBoxWhereInput[]
-    workflowOutBox?: XOR<WorkFlowRunScalarRelationFilter, WorkFlowRunWhereInput>
-  }, "id" | "outboxId">
+    workFlowRun?: XOR<WorkFlowRunScalarRelationFilter, WorkFlowRunWhereInput>
+  }, "id" | "WorkFlowRunId">
 
   export type WorkFlowOutBoxOrderByWithAggregationInput = {
     id?: SortOrder
-    outboxId?: SortOrder
+    WorkFlowRunId?: SortOrder
     _count?: WorkFlowOutBoxCountOrderByAggregateInput
     _max?: WorkFlowOutBoxMaxOrderByAggregateInput
     _min?: WorkFlowOutBoxMinOrderByAggregateInput
@@ -10546,7 +10614,7 @@ export namespace Prisma {
     OR?: WorkFlowOutBoxScalarWhereWithAggregatesInput[]
     NOT?: WorkFlowOutBoxScalarWhereWithAggregatesInput | WorkFlowOutBoxScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"WorkFlowOutBox"> | string
-    outboxId?: StringWithAggregatesFilter<"WorkFlowOutBox"> | string
+    WorkFlowRunId?: StringWithAggregatesFilter<"WorkFlowOutBox"> | string
   }
 
   export type UserCreateInput = {
@@ -10778,6 +10846,7 @@ export namespace Prisma {
 
   export type ActionNodesCreateInput = {
     id?: string
+    sortingOrder?: number
     workflow: WorkFlowCreateNestedOneWithoutActionsNodesInput
     availableActionNodes: AvailableActionNodesCreateNestedOneWithoutActionNodesInput
   }
@@ -10786,10 +10855,12 @@ export namespace Prisma {
     id?: string
     workflowId: string
     ActionNodeId: string
+    sortingOrder?: number
   }
 
   export type ActionNodesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
     workflow?: WorkFlowUpdateOneRequiredWithoutActionsNodesNestedInput
     availableActionNodes?: AvailableActionNodesUpdateOneRequiredWithoutActionNodesNestedInput
   }
@@ -10798,22 +10869,26 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     ActionNodeId?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type ActionNodesCreateManyInput = {
     id?: string
     workflowId: string
     ActionNodeId: string
+    sortingOrder?: number
   }
 
   export type ActionNodesUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type ActionNodesUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     ActionNodeId?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type AvailableActionNodesCreateInput = {
@@ -10859,28 +10934,28 @@ export namespace Prisma {
     id?: string
     meta: JsonNullValueInput | InputJsonValue
     workflow: WorkFlowCreateNestedOneWithoutWorkflowRunInput
-    outbox?: WorkFlowOutBoxCreateNestedOneWithoutWorkflowOutBoxInput
+    outbox?: WorkFlowOutBoxCreateNestedOneWithoutWorkFlowRunInput
   }
 
   export type WorkFlowRunUncheckedCreateInput = {
     id?: string
     workflowId: string
     meta: JsonNullValueInput | InputJsonValue
-    outbox?: WorkFlowOutBoxUncheckedCreateNestedOneWithoutWorkflowOutBoxInput
+    outbox?: WorkFlowOutBoxUncheckedCreateNestedOneWithoutWorkFlowRunInput
   }
 
   export type WorkFlowRunUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     meta?: JsonNullValueInput | InputJsonValue
     workflow?: WorkFlowUpdateOneRequiredWithoutWorkflowRunNestedInput
-    outbox?: WorkFlowOutBoxUpdateOneWithoutWorkflowOutBoxNestedInput
+    outbox?: WorkFlowOutBoxUpdateOneWithoutWorkFlowRunNestedInput
   }
 
   export type WorkFlowRunUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     meta?: JsonNullValueInput | InputJsonValue
-    outbox?: WorkFlowOutBoxUncheckedUpdateOneWithoutWorkflowOutBoxNestedInput
+    outbox?: WorkFlowOutBoxUncheckedUpdateOneWithoutWorkFlowRunNestedInput
   }
 
   export type WorkFlowRunCreateManyInput = {
@@ -10902,27 +10977,27 @@ export namespace Prisma {
 
   export type WorkFlowOutBoxCreateInput = {
     id?: string
-    workflowOutBox: WorkFlowRunCreateNestedOneWithoutOutboxInput
+    workFlowRun: WorkFlowRunCreateNestedOneWithoutOutboxInput
   }
 
   export type WorkFlowOutBoxUncheckedCreateInput = {
     id?: string
-    outboxId: string
+    WorkFlowRunId: string
   }
 
   export type WorkFlowOutBoxUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    workflowOutBox?: WorkFlowRunUpdateOneRequiredWithoutOutboxNestedInput
+    workFlowRun?: WorkFlowRunUpdateOneRequiredWithoutOutboxNestedInput
   }
 
   export type WorkFlowOutBoxUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    outboxId?: StringFieldUpdateOperationsInput | string
+    WorkFlowRunId?: StringFieldUpdateOperationsInput | string
   }
 
   export type WorkFlowOutBoxCreateManyInput = {
     id?: string
-    outboxId: string
+    WorkFlowRunId: string
   }
 
   export type WorkFlowOutBoxUpdateManyMutationInput = {
@@ -10931,7 +11006,7 @@ export namespace Prisma {
 
   export type WorkFlowOutBoxUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    outboxId?: StringFieldUpdateOperationsInput | string
+    WorkFlowRunId?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -11180,6 +11255,17 @@ export namespace Prisma {
     name?: SortOrder
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type AvailableActionNodesScalarRelationFilter = {
     is?: AvailableActionNodesWhereInput
     isNot?: AvailableActionNodesWhereInput
@@ -11189,18 +11275,45 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     ActionNodeId?: SortOrder
+    sortingOrder?: SortOrder
+  }
+
+  export type ActionNodesAvgOrderByAggregateInput = {
+    sortingOrder?: SortOrder
   }
 
   export type ActionNodesMaxOrderByAggregateInput = {
     id?: SortOrder
     workflowId?: SortOrder
     ActionNodeId?: SortOrder
+    sortingOrder?: SortOrder
   }
 
   export type ActionNodesMinOrderByAggregateInput = {
     id?: SortOrder
     workflowId?: SortOrder
     ActionNodeId?: SortOrder
+    sortingOrder?: SortOrder
+  }
+
+  export type ActionNodesSumOrderByAggregateInput = {
+    sortingOrder?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type AvailableActionNodesCountOrderByAggregateInput = {
@@ -11293,17 +11406,17 @@ export namespace Prisma {
 
   export type WorkFlowOutBoxCountOrderByAggregateInput = {
     id?: SortOrder
-    outboxId?: SortOrder
+    WorkFlowRunId?: SortOrder
   }
 
   export type WorkFlowOutBoxMaxOrderByAggregateInput = {
     id?: SortOrder
-    outboxId?: SortOrder
+    WorkFlowRunId?: SortOrder
   }
 
   export type WorkFlowOutBoxMinOrderByAggregateInput = {
     id?: SortOrder
-    outboxId?: SortOrder
+    WorkFlowRunId?: SortOrder
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
@@ -11572,6 +11685,14 @@ export namespace Prisma {
     connect?: AvailableActionNodesWhereUniqueInput
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type WorkFlowUpdateOneRequiredWithoutActionsNodesNestedInput = {
     create?: XOR<WorkFlowCreateWithoutActionsNodesInput, WorkFlowUncheckedCreateWithoutActionsNodesInput>
     connectOrCreate?: WorkFlowCreateOrConnectWithoutActionsNodesInput
@@ -11636,15 +11757,15 @@ export namespace Prisma {
     connect?: WorkFlowWhereUniqueInput
   }
 
-  export type WorkFlowOutBoxCreateNestedOneWithoutWorkflowOutBoxInput = {
-    create?: XOR<WorkFlowOutBoxCreateWithoutWorkflowOutBoxInput, WorkFlowOutBoxUncheckedCreateWithoutWorkflowOutBoxInput>
-    connectOrCreate?: WorkFlowOutBoxCreateOrConnectWithoutWorkflowOutBoxInput
+  export type WorkFlowOutBoxCreateNestedOneWithoutWorkFlowRunInput = {
+    create?: XOR<WorkFlowOutBoxCreateWithoutWorkFlowRunInput, WorkFlowOutBoxUncheckedCreateWithoutWorkFlowRunInput>
+    connectOrCreate?: WorkFlowOutBoxCreateOrConnectWithoutWorkFlowRunInput
     connect?: WorkFlowOutBoxWhereUniqueInput
   }
 
-  export type WorkFlowOutBoxUncheckedCreateNestedOneWithoutWorkflowOutBoxInput = {
-    create?: XOR<WorkFlowOutBoxCreateWithoutWorkflowOutBoxInput, WorkFlowOutBoxUncheckedCreateWithoutWorkflowOutBoxInput>
-    connectOrCreate?: WorkFlowOutBoxCreateOrConnectWithoutWorkflowOutBoxInput
+  export type WorkFlowOutBoxUncheckedCreateNestedOneWithoutWorkFlowRunInput = {
+    create?: XOR<WorkFlowOutBoxCreateWithoutWorkFlowRunInput, WorkFlowOutBoxUncheckedCreateWithoutWorkFlowRunInput>
+    connectOrCreate?: WorkFlowOutBoxCreateOrConnectWithoutWorkFlowRunInput
     connect?: WorkFlowOutBoxWhereUniqueInput
   }
 
@@ -11656,24 +11777,24 @@ export namespace Prisma {
     update?: XOR<XOR<WorkFlowUpdateToOneWithWhereWithoutWorkflowRunInput, WorkFlowUpdateWithoutWorkflowRunInput>, WorkFlowUncheckedUpdateWithoutWorkflowRunInput>
   }
 
-  export type WorkFlowOutBoxUpdateOneWithoutWorkflowOutBoxNestedInput = {
-    create?: XOR<WorkFlowOutBoxCreateWithoutWorkflowOutBoxInput, WorkFlowOutBoxUncheckedCreateWithoutWorkflowOutBoxInput>
-    connectOrCreate?: WorkFlowOutBoxCreateOrConnectWithoutWorkflowOutBoxInput
-    upsert?: WorkFlowOutBoxUpsertWithoutWorkflowOutBoxInput
+  export type WorkFlowOutBoxUpdateOneWithoutWorkFlowRunNestedInput = {
+    create?: XOR<WorkFlowOutBoxCreateWithoutWorkFlowRunInput, WorkFlowOutBoxUncheckedCreateWithoutWorkFlowRunInput>
+    connectOrCreate?: WorkFlowOutBoxCreateOrConnectWithoutWorkFlowRunInput
+    upsert?: WorkFlowOutBoxUpsertWithoutWorkFlowRunInput
     disconnect?: WorkFlowOutBoxWhereInput | boolean
     delete?: WorkFlowOutBoxWhereInput | boolean
     connect?: WorkFlowOutBoxWhereUniqueInput
-    update?: XOR<XOR<WorkFlowOutBoxUpdateToOneWithWhereWithoutWorkflowOutBoxInput, WorkFlowOutBoxUpdateWithoutWorkflowOutBoxInput>, WorkFlowOutBoxUncheckedUpdateWithoutWorkflowOutBoxInput>
+    update?: XOR<XOR<WorkFlowOutBoxUpdateToOneWithWhereWithoutWorkFlowRunInput, WorkFlowOutBoxUpdateWithoutWorkFlowRunInput>, WorkFlowOutBoxUncheckedUpdateWithoutWorkFlowRunInput>
   }
 
-  export type WorkFlowOutBoxUncheckedUpdateOneWithoutWorkflowOutBoxNestedInput = {
-    create?: XOR<WorkFlowOutBoxCreateWithoutWorkflowOutBoxInput, WorkFlowOutBoxUncheckedCreateWithoutWorkflowOutBoxInput>
-    connectOrCreate?: WorkFlowOutBoxCreateOrConnectWithoutWorkflowOutBoxInput
-    upsert?: WorkFlowOutBoxUpsertWithoutWorkflowOutBoxInput
+  export type WorkFlowOutBoxUncheckedUpdateOneWithoutWorkFlowRunNestedInput = {
+    create?: XOR<WorkFlowOutBoxCreateWithoutWorkFlowRunInput, WorkFlowOutBoxUncheckedCreateWithoutWorkFlowRunInput>
+    connectOrCreate?: WorkFlowOutBoxCreateOrConnectWithoutWorkFlowRunInput
+    upsert?: WorkFlowOutBoxUpsertWithoutWorkFlowRunInput
     disconnect?: WorkFlowOutBoxWhereInput | boolean
     delete?: WorkFlowOutBoxWhereInput | boolean
     connect?: WorkFlowOutBoxWhereUniqueInput
-    update?: XOR<XOR<WorkFlowOutBoxUpdateToOneWithWhereWithoutWorkflowOutBoxInput, WorkFlowOutBoxUpdateWithoutWorkflowOutBoxInput>, WorkFlowOutBoxUncheckedUpdateWithoutWorkflowOutBoxInput>
+    update?: XOR<XOR<WorkFlowOutBoxUpdateToOneWithWhereWithoutWorkFlowRunInput, WorkFlowOutBoxUpdateWithoutWorkFlowRunInput>, WorkFlowOutBoxUncheckedUpdateWithoutWorkFlowRunInput>
   }
 
   export type WorkFlowRunCreateNestedOneWithoutOutboxInput = {
@@ -11797,6 +11918,33 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
   export type NestedJsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -11935,12 +12083,14 @@ export namespace Prisma {
 
   export type ActionNodesCreateWithoutWorkflowInput = {
     id?: string
+    sortingOrder?: number
     availableActionNodes: AvailableActionNodesCreateNestedOneWithoutActionNodesInput
   }
 
   export type ActionNodesUncheckedCreateWithoutWorkflowInput = {
     id?: string
     ActionNodeId: string
+    sortingOrder?: number
   }
 
   export type ActionNodesCreateOrConnectWithoutWorkflowInput = {
@@ -11956,13 +12106,13 @@ export namespace Prisma {
   export type WorkFlowRunCreateWithoutWorkflowInput = {
     id?: string
     meta: JsonNullValueInput | InputJsonValue
-    outbox?: WorkFlowOutBoxCreateNestedOneWithoutWorkflowOutBoxInput
+    outbox?: WorkFlowOutBoxCreateNestedOneWithoutWorkFlowRunInput
   }
 
   export type WorkFlowRunUncheckedCreateWithoutWorkflowInput = {
     id?: string
     meta: JsonNullValueInput | InputJsonValue
-    outbox?: WorkFlowOutBoxUncheckedCreateNestedOneWithoutWorkflowOutBoxInput
+    outbox?: WorkFlowOutBoxUncheckedCreateNestedOneWithoutWorkFlowRunInput
   }
 
   export type WorkFlowRunCreateOrConnectWithoutWorkflowInput = {
@@ -12019,6 +12169,7 @@ export namespace Prisma {
     id?: StringFilter<"ActionNodes"> | string
     workflowId?: StringFilter<"ActionNodes"> | string
     ActionNodeId?: StringFilter<"ActionNodes"> | string
+    sortingOrder?: IntFilter<"ActionNodes"> | number
   }
 
   export type WorkFlowRunUpsertWithWhereUniqueWithoutWorkflowInput = {
@@ -12245,12 +12396,14 @@ export namespace Prisma {
 
   export type ActionNodesCreateWithoutAvailableActionNodesInput = {
     id?: string
+    sortingOrder?: number
     workflow: WorkFlowCreateNestedOneWithoutActionsNodesInput
   }
 
   export type ActionNodesUncheckedCreateWithoutAvailableActionNodesInput = {
     id?: string
     workflowId: string
+    sortingOrder?: number
   }
 
   export type ActionNodesCreateOrConnectWithoutAvailableActionNodesInput = {
@@ -12296,17 +12449,17 @@ export namespace Prisma {
     create: XOR<WorkFlowCreateWithoutWorkflowRunInput, WorkFlowUncheckedCreateWithoutWorkflowRunInput>
   }
 
-  export type WorkFlowOutBoxCreateWithoutWorkflowOutBoxInput = {
+  export type WorkFlowOutBoxCreateWithoutWorkFlowRunInput = {
     id?: string
   }
 
-  export type WorkFlowOutBoxUncheckedCreateWithoutWorkflowOutBoxInput = {
+  export type WorkFlowOutBoxUncheckedCreateWithoutWorkFlowRunInput = {
     id?: string
   }
 
-  export type WorkFlowOutBoxCreateOrConnectWithoutWorkflowOutBoxInput = {
+  export type WorkFlowOutBoxCreateOrConnectWithoutWorkFlowRunInput = {
     where: WorkFlowOutBoxWhereUniqueInput
-    create: XOR<WorkFlowOutBoxCreateWithoutWorkflowOutBoxInput, WorkFlowOutBoxUncheckedCreateWithoutWorkflowOutBoxInput>
+    create: XOR<WorkFlowOutBoxCreateWithoutWorkFlowRunInput, WorkFlowOutBoxUncheckedCreateWithoutWorkFlowRunInput>
   }
 
   export type WorkFlowUpsertWithoutWorkflowRunInput = {
@@ -12332,22 +12485,22 @@ export namespace Prisma {
     actionsNodes?: ActionNodesUncheckedUpdateManyWithoutWorkflowNestedInput
   }
 
-  export type WorkFlowOutBoxUpsertWithoutWorkflowOutBoxInput = {
-    update: XOR<WorkFlowOutBoxUpdateWithoutWorkflowOutBoxInput, WorkFlowOutBoxUncheckedUpdateWithoutWorkflowOutBoxInput>
-    create: XOR<WorkFlowOutBoxCreateWithoutWorkflowOutBoxInput, WorkFlowOutBoxUncheckedCreateWithoutWorkflowOutBoxInput>
+  export type WorkFlowOutBoxUpsertWithoutWorkFlowRunInput = {
+    update: XOR<WorkFlowOutBoxUpdateWithoutWorkFlowRunInput, WorkFlowOutBoxUncheckedUpdateWithoutWorkFlowRunInput>
+    create: XOR<WorkFlowOutBoxCreateWithoutWorkFlowRunInput, WorkFlowOutBoxUncheckedCreateWithoutWorkFlowRunInput>
     where?: WorkFlowOutBoxWhereInput
   }
 
-  export type WorkFlowOutBoxUpdateToOneWithWhereWithoutWorkflowOutBoxInput = {
+  export type WorkFlowOutBoxUpdateToOneWithWhereWithoutWorkFlowRunInput = {
     where?: WorkFlowOutBoxWhereInput
-    data: XOR<WorkFlowOutBoxUpdateWithoutWorkflowOutBoxInput, WorkFlowOutBoxUncheckedUpdateWithoutWorkflowOutBoxInput>
+    data: XOR<WorkFlowOutBoxUpdateWithoutWorkFlowRunInput, WorkFlowOutBoxUncheckedUpdateWithoutWorkFlowRunInput>
   }
 
-  export type WorkFlowOutBoxUpdateWithoutWorkflowOutBoxInput = {
+  export type WorkFlowOutBoxUpdateWithoutWorkFlowRunInput = {
     id?: StringFieldUpdateOperationsInput | string
   }
 
-  export type WorkFlowOutBoxUncheckedUpdateWithoutWorkflowOutBoxInput = {
+  export type WorkFlowOutBoxUncheckedUpdateWithoutWorkFlowRunInput = {
     id?: StringFieldUpdateOperationsInput | string
   }
 
@@ -12414,6 +12567,7 @@ export namespace Prisma {
   export type ActionNodesCreateManyWorkflowInput = {
     id?: string
     ActionNodeId: string
+    sortingOrder?: number
   }
 
   export type WorkFlowRunCreateManyWorkflowInput = {
@@ -12423,29 +12577,32 @@ export namespace Prisma {
 
   export type ActionNodesUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
     availableActionNodes?: AvailableActionNodesUpdateOneRequiredWithoutActionNodesNestedInput
   }
 
   export type ActionNodesUncheckedUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     ActionNodeId?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type ActionNodesUncheckedUpdateManyWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     ActionNodeId?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type WorkFlowRunUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     meta?: JsonNullValueInput | InputJsonValue
-    outbox?: WorkFlowOutBoxUpdateOneWithoutWorkflowOutBoxNestedInput
+    outbox?: WorkFlowOutBoxUpdateOneWithoutWorkFlowRunNestedInput
   }
 
   export type WorkFlowRunUncheckedUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     meta?: JsonNullValueInput | InputJsonValue
-    outbox?: WorkFlowOutBoxUncheckedUpdateOneWithoutWorkflowOutBoxNestedInput
+    outbox?: WorkFlowOutBoxUncheckedUpdateOneWithoutWorkFlowRunNestedInput
   }
 
   export type WorkFlowRunUncheckedUpdateManyWithoutWorkflowInput = {
@@ -12476,21 +12633,25 @@ export namespace Prisma {
   export type ActionNodesCreateManyAvailableActionNodesInput = {
     id?: string
     workflowId: string
+    sortingOrder?: number
   }
 
   export type ActionNodesUpdateWithoutAvailableActionNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
     workflow?: WorkFlowUpdateOneRequiredWithoutActionsNodesNestedInput
   }
 
   export type ActionNodesUncheckedUpdateWithoutAvailableActionNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type ActionNodesUncheckedUpdateManyWithoutAvailableActionNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
+    sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
 
