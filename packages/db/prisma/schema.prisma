@@ -46,6 +46,7 @@ model TriggerNodes {
   workflowId            String                @unique
   availableTriggerNodes AvailableTriggerNodes @relation(fields: [TriggerNodeId], references: [id])
   TriggerNodeId         String
+
 }
 
 model AvailableTriggerNodes {
@@ -60,6 +61,7 @@ model ActionNodes {
   workflowId           String
   availableActionNodes AvailableActionNodes @relation(fields: [ActionNodeId], references: [id])
   ActionNodeId         String
+    sortingOrder          Int                   @default(0)
 }
 
 model AvailableActionNodes {
@@ -77,7 +79,7 @@ model WorkFlowRun {
 }
 
 model WorkFlowOutBox {
-  id             String      @id @default(uuid())
-  outboxId       String      @unique
-  workflowOutBox WorkFlowRun @relation(fields: [outboxId], references: [id])
+  id                  String      @id @default(uuid())
+  WorkFlowRunId       String      @unique
+  workFlowRun         WorkFlowRun            @relation(fields: [WorkFlowRunId], references: [id])
 }

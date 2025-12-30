@@ -11,16 +11,16 @@ app.post("/hooks/catch/:userId/:workflow", async (req, res) => {
   const body = req.body;
 
   await prismaClient.$transaction(async (tx: any) => {
-    const run = await prismaClient.workFlowRun.create({
+    const run = await tx.workFlowRun.create({
       data: {
         workflowId: workflowId,
         meta: body,
       },
     });
 
-    prismaClient.workFlowOutBox.create({
+    await tx.workFlowOutBox.create({
       data: {
-        outboxId: run.id,
+        WorkFlowRunId: run.id,
       },
     });
   });
