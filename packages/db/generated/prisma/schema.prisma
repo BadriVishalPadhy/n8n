@@ -15,37 +15,32 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
+  id        String     @id @default(uuid())
+  email     String     @unique
   password  String
   name      String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  sessions  Session[]
-}
-
-model Session {
-  sid    String   @id
-  userId String
-  expire DateTime @default(now())
-  user   User     @relation(fields: [userId], references: [id])
-
-  @@index([expire])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  workflows WorkFlow[]
 }
 
 model WorkFlow {
   id           String        @id @default(uuid())
+  triggerId    String
+  user         User          @relation(fields: [userId], references: [id])
+  userId       String
   triggerNodes TriggerNodes?
   actionsNodes ActionNodes[]
   workflowRun  WorkFlowRun[]
 }
 
 model TriggerNodes {
-  id                    String                @id @default(uuid())
-  workflow              WorkFlow              @relation(fields: [workflowId], references: [id])
-  workflowId            String                @unique
-  availableTriggerNodes AvailableTriggerNodes @relation(fields: [TriggerNodeId], references: [id])
-  TriggerNodeId         String
+  id         String   @id @default(uuid())
+  workflow   WorkFlow @relation(fields: [workflowId], references: [id])
+  workflowId String   @unique
+
+  TriggerNodeId String
+  type          AvailableTriggerNodes @relation(fields: [TriggerNodeId], references: [id])
 }
 
 model AvailableTriggerNodes {
@@ -55,12 +50,12 @@ model AvailableTriggerNodes {
 }
 
 model ActionNodes {
-  id                   String               @id @default(uuid())
-  workflow             WorkFlow             @relation(fields: [workflowId], references: [id])
-  workflowId           String
-  availableActionNodes AvailableActionNodes @relation(fields: [ActionNodeId], references: [id])
-  ActionNodeId         String
-  sortingOrder         Int                  @default(0)
+  id           String               @id @default(uuid())
+  workflow     WorkFlow             @relation(fields: [workflowId], references: [id])
+  workflowId   String
+  ActionNodeId String
+  sortingOrder Int                  @default(0)
+  type         AvailableActionNodes @relation(fields: [ActionNodeId], references: [id])
 }
 
 model AvailableActionNodes {

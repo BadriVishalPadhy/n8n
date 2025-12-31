@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "WorkFlow" ALTER COLUMN "triggerId" DROP DEFAULT,
+ALTER COLUMN "userId" DROP DEFAULT;

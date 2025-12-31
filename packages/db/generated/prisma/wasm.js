@@ -126,14 +126,10 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.SessionScalarFieldEnum = {
-  sid: 'sid',
-  userId: 'userId',
-  expire: 'expire'
-};
-
 exports.Prisma.WorkFlowScalarFieldEnum = {
-  id: 'id'
+  id: 'id',
+  triggerId: 'triggerId',
+  userId: 'userId'
 };
 
 exports.Prisma.TriggerNodesScalarFieldEnum = {
@@ -198,7 +194,6 @@ exports.Prisma.JsonNullValueFilter = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Session: 'Session',
   WorkFlow: 'WorkFlow',
   TriggerNodes: 'TriggerNodes',
   AvailableTriggerNodes: 'AvailableTriggerNodes',

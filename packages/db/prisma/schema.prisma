@@ -21,21 +21,15 @@ model User {
   name      String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  sessions  Session[]
+  workflows WorkFlow[]
 }
 
-model Session {
-  sid    String   @id
-  userId String
-  expire DateTime @default(now())
-  user   User     @relation(fields: [userId], references: [id])
-
-  @@index([expire])
-}
 
 model WorkFlow {
   id           String        @id @default(uuid())
   triggerId    String
+  user   User     @relation(fields: [userId], references: [id])
+  userId       String
   triggerNodes TriggerNodes?
   actionsNodes ActionNodes[]
   workflowRun  WorkFlowRun[]
@@ -45,10 +39,11 @@ model TriggerNodes {
   id                    String                @id @default(uuid())
   workflow              WorkFlow              @relation(fields: [workflowId], references: [id])
   workflowId            String                @unique
-  availableTriggerNodes AvailableTriggerNodes @relation(fields: [TriggerNodeId], references: [id])
-  TriggerNodeId         String
 
-}
+  TriggerNodeId         String
+  type  AvailableTriggerNodes @relation(fields: [TriggerNodeId], references: [id])
+  }
+
 
 model AvailableTriggerNodes {
   id          String         @id @default(uuid())
@@ -57,12 +52,12 @@ model AvailableTriggerNodes {
 }
 
 model ActionNodes {
-  id                   String               @id @default(uuid())
-  workflow             WorkFlow             @relation(fields: [workflowId], references: [id])
+  id                   String                @id @default(uuid())
+  workflow             WorkFlow              @relation(fields: [workflowId], references: [id])
   workflowId           String
-  availableActionNodes AvailableActionNodes @relation(fields: [ActionNodeId], references: [id])
   ActionNodeId         String
-    sortingOrder          Int                   @default(0)
+  sortingOrder         Int                   @default(0)
+  type                 AvailableActionNodes @relation(fields: [ActionNodeId], references: [id])
 }
 
 model AvailableActionNodes {
@@ -82,5 +77,5 @@ model WorkFlowRun {
 model WorkFlowOutBox {
   id                  String      @id @default(uuid())
   WorkFlowRunId       String      @unique
-  workFlowRun         WorkFlowRun            @relation(fields: [WorkFlowRunId], references: [id])
+  workFlowRun         WorkFlowRun @relation(fields: [WorkFlowRunId], references: [id])
 }
