@@ -19,11 +19,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
- * Model Session
- * 
- */
-export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
-/**
  * Model WorkFlow
  * 
  */
@@ -191,16 +186,6 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs>;
-
-  /**
-   * `prisma.session`: Exposes CRUD operations for the **Session** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Sessions
-    * const sessions = await prisma.session.findMany()
-    * ```
-    */
-  get session(): Prisma.SessionDelegate<ExtArgs>;
 
   /**
    * `prisma.workFlow`: Exposes CRUD operations for the **WorkFlow** model.
@@ -712,7 +697,6 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    Session: 'Session',
     WorkFlow: 'WorkFlow',
     TriggerNodes: 'TriggerNodes',
     AvailableTriggerNodes: 'AvailableTriggerNodes',
@@ -735,7 +719,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "session" | "workFlow" | "triggerNodes" | "availableTriggerNodes" | "actionNodes" | "availableActionNodes" | "workFlowRun" | "workFlowOutBox"
+      modelProps: "user" | "workFlow" | "triggerNodes" | "availableTriggerNodes" | "actionNodes" | "availableActionNodes" | "workFlowRun" | "workFlowOutBox"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -806,76 +790,6 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
-          }
-        }
-      }
-      Session: {
-        payload: Prisma.$SessionPayload<ExtArgs>
-        fields: Prisma.SessionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.SessionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.SessionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
-          }
-          findFirst: {
-            args: Prisma.SessionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.SessionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
-          }
-          findMany: {
-            args: Prisma.SessionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>[]
-          }
-          create: {
-            args: Prisma.SessionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
-          }
-          createMany: {
-            args: Prisma.SessionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.SessionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>[]
-          }
-          delete: {
-            args: Prisma.SessionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
-          }
-          update: {
-            args: Prisma.SessionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
-          }
-          deleteMany: {
-            args: Prisma.SessionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.SessionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.SessionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
-          }
-          aggregate: {
-            args: Prisma.SessionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateSession>
-          }
-          groupBy: {
-            args: Prisma.SessionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<SessionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.SessionCountArgs<ExtArgs>
-            result: $Utils.Optional<SessionCountAggregateOutputType> | number
           }
         }
       }
@@ -1530,11 +1444,11 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    sessions: number
+    workflows: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+    workflows?: boolean | UserCountOutputTypeCountWorkflowsArgs
   }
 
   // Custom InputTypes
@@ -1551,8 +1465,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SessionWhereInput
+  export type UserCountOutputTypeCountWorkflowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkFlowWhereInput
   }
 
 
@@ -1834,7 +1748,7 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    sessions?: boolean | User$sessionsArgs<ExtArgs>
+    workflows?: boolean | User$workflowsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1857,7 +1771,7 @@ export namespace Prisma {
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    sessions?: boolean | User$sessionsArgs<ExtArgs>
+    workflows?: boolean | User$workflowsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1865,7 +1779,7 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      sessions: Prisma.$SessionPayload<ExtArgs>[]
+      workflows: Prisma.$WorkFlowPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2238,7 +2152,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany"> | Null>
+    workflows<T extends User$workflowsArgs<ExtArgs> = {}>(args?: Subset<T, User$workflowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkFlowPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2588,23 +2502,23 @@ export namespace Prisma {
   }
 
   /**
-   * User.sessions
+   * User.workflows
    */
-  export type User$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$workflowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Session
+     * Select specific fields to fetch from the WorkFlow
      */
-    select?: SessionSelect<ExtArgs> | null
+    select?: WorkFlowSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: SessionInclude<ExtArgs> | null
-    where?: SessionWhereInput
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
-    cursor?: SessionWhereUniqueInput
+    include?: WorkFlowInclude<ExtArgs> | null
+    where?: WorkFlowWhereInput
+    orderBy?: WorkFlowOrderByWithRelationInput | WorkFlowOrderByWithRelationInput[]
+    cursor?: WorkFlowWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+    distinct?: WorkFlowScalarFieldEnum | WorkFlowScalarFieldEnum[]
   }
 
   /**
@@ -2623,915 +2537,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Session
-   */
-
-  export type AggregateSession = {
-    _count: SessionCountAggregateOutputType | null
-    _min: SessionMinAggregateOutputType | null
-    _max: SessionMaxAggregateOutputType | null
-  }
-
-  export type SessionMinAggregateOutputType = {
-    sid: string | null
-    userId: string | null
-    expire: Date | null
-  }
-
-  export type SessionMaxAggregateOutputType = {
-    sid: string | null
-    userId: string | null
-    expire: Date | null
-  }
-
-  export type SessionCountAggregateOutputType = {
-    sid: number
-    userId: number
-    expire: number
-    _all: number
-  }
-
-
-  export type SessionMinAggregateInputType = {
-    sid?: true
-    userId?: true
-    expire?: true
-  }
-
-  export type SessionMaxAggregateInputType = {
-    sid?: true
-    userId?: true
-    expire?: true
-  }
-
-  export type SessionCountAggregateInputType = {
-    sid?: true
-    userId?: true
-    expire?: true
-    _all?: true
-  }
-
-  export type SessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Session to aggregate.
-     */
-    where?: SessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Sessions to fetch.
-     */
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: SessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Sessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Sessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Sessions
-    **/
-    _count?: true | SessionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: SessionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: SessionMaxAggregateInputType
-  }
-
-  export type GetSessionAggregateType<T extends SessionAggregateArgs> = {
-        [P in keyof T & keyof AggregateSession]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateSession[P]>
-      : GetScalarType<T[P], AggregateSession[P]>
-  }
-
-
-
-
-  export type SessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SessionWhereInput
-    orderBy?: SessionOrderByWithAggregationInput | SessionOrderByWithAggregationInput[]
-    by: SessionScalarFieldEnum[] | SessionScalarFieldEnum
-    having?: SessionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: SessionCountAggregateInputType | true
-    _min?: SessionMinAggregateInputType
-    _max?: SessionMaxAggregateInputType
-  }
-
-  export type SessionGroupByOutputType = {
-    sid: string
-    userId: string
-    expire: Date
-    _count: SessionCountAggregateOutputType | null
-    _min: SessionMinAggregateOutputType | null
-    _max: SessionMaxAggregateOutputType | null
-  }
-
-  type GetSessionGroupByPayload<T extends SessionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<SessionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof SessionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], SessionGroupByOutputType[P]>
-            : GetScalarType<T[P], SessionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type SessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    sid?: boolean
-    userId?: boolean
-    expire?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["session"]>
-
-  export type SessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    sid?: boolean
-    userId?: boolean
-    expire?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["session"]>
-
-  export type SessionSelectScalar = {
-    sid?: boolean
-    userId?: boolean
-    expire?: boolean
-  }
-
-  export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type SessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $SessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Session"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      sid: string
-      userId: string
-      expire: Date
-    }, ExtArgs["result"]["session"]>
-    composites: {}
-  }
-
-  type SessionGetPayload<S extends boolean | null | undefined | SessionDefaultArgs> = $Result.GetResult<Prisma.$SessionPayload, S>
-
-  type SessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<SessionFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: SessionCountAggregateInputType | true
-    }
-
-  export interface SessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Session'], meta: { name: 'Session' } }
-    /**
-     * Find zero or one Session that matches the filter.
-     * @param {SessionFindUniqueArgs} args - Arguments to find a Session
-     * @example
-     * // Get one Session
-     * const session = await prisma.session.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends SessionFindUniqueArgs>(args: SelectSubset<T, SessionFindUniqueArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one Session that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {SessionFindUniqueOrThrowArgs} args - Arguments to find a Session
-     * @example
-     * // Get one Session
-     * const session = await prisma.session.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends SessionFindUniqueOrThrowArgs>(args: SelectSubset<T, SessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first Session that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SessionFindFirstArgs} args - Arguments to find a Session
-     * @example
-     * // Get one Session
-     * const session = await prisma.session.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends SessionFindFirstArgs>(args?: SelectSubset<T, SessionFindFirstArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first Session that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SessionFindFirstOrThrowArgs} args - Arguments to find a Session
-     * @example
-     * // Get one Session
-     * const session = await prisma.session.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends SessionFindFirstOrThrowArgs>(args?: SelectSubset<T, SessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more Sessions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SessionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Sessions
-     * const sessions = await prisma.session.findMany()
-     * 
-     * // Get first 10 Sessions
-     * const sessions = await prisma.session.findMany({ take: 10 })
-     * 
-     * // Only select the `sid`
-     * const sessionWithSidOnly = await prisma.session.findMany({ select: { sid: true } })
-     * 
-     */
-    findMany<T extends SessionFindManyArgs>(args?: SelectSubset<T, SessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a Session.
-     * @param {SessionCreateArgs} args - Arguments to create a Session.
-     * @example
-     * // Create one Session
-     * const Session = await prisma.session.create({
-     *   data: {
-     *     // ... data to create a Session
-     *   }
-     * })
-     * 
-     */
-    create<T extends SessionCreateArgs>(args: SelectSubset<T, SessionCreateArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many Sessions.
-     * @param {SessionCreateManyArgs} args - Arguments to create many Sessions.
-     * @example
-     * // Create many Sessions
-     * const session = await prisma.session.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends SessionCreateManyArgs>(args?: SelectSubset<T, SessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Sessions and returns the data saved in the database.
-     * @param {SessionCreateManyAndReturnArgs} args - Arguments to create many Sessions.
-     * @example
-     * // Create many Sessions
-     * const session = await prisma.session.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Sessions and only return the `sid`
-     * const sessionWithSidOnly = await prisma.session.createManyAndReturn({ 
-     *   select: { sid: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends SessionCreateManyAndReturnArgs>(args?: SelectSubset<T, SessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "createManyAndReturn">>
-
-    /**
-     * Delete a Session.
-     * @param {SessionDeleteArgs} args - Arguments to delete one Session.
-     * @example
-     * // Delete one Session
-     * const Session = await prisma.session.delete({
-     *   where: {
-     *     // ... filter to delete one Session
-     *   }
-     * })
-     * 
-     */
-    delete<T extends SessionDeleteArgs>(args: SelectSubset<T, SessionDeleteArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one Session.
-     * @param {SessionUpdateArgs} args - Arguments to update one Session.
-     * @example
-     * // Update one Session
-     * const session = await prisma.session.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends SessionUpdateArgs>(args: SelectSubset<T, SessionUpdateArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more Sessions.
-     * @param {SessionDeleteManyArgs} args - Arguments to filter Sessions to delete.
-     * @example
-     * // Delete a few Sessions
-     * const { count } = await prisma.session.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends SessionDeleteManyArgs>(args?: SelectSubset<T, SessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Sessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SessionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Sessions
-     * const session = await prisma.session.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends SessionUpdateManyArgs>(args: SelectSubset<T, SessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Session.
-     * @param {SessionUpsertArgs} args - Arguments to update or create a Session.
-     * @example
-     * // Update or create a Session
-     * const session = await prisma.session.upsert({
-     *   create: {
-     *     // ... data to create a Session
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Session we want to update
-     *   }
-     * })
-     */
-    upsert<T extends SessionUpsertArgs>(args: SelectSubset<T, SessionUpsertArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of Sessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SessionCountArgs} args - Arguments to filter Sessions to count.
-     * @example
-     * // Count the number of Sessions
-     * const count = await prisma.session.count({
-     *   where: {
-     *     // ... the filter for the Sessions we want to count
-     *   }
-     * })
-    **/
-    count<T extends SessionCountArgs>(
-      args?: Subset<T, SessionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], SessionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Session.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends SessionAggregateArgs>(args: Subset<T, SessionAggregateArgs>): Prisma.PrismaPromise<GetSessionAggregateType<T>>
-
-    /**
-     * Group by Session.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {SessionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends SessionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: SessionGroupByArgs['orderBy'] }
-        : { orderBy?: SessionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, SessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Session model
-   */
-  readonly fields: SessionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Session.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__SessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Session model
-   */ 
-  interface SessionFieldRefs {
-    readonly sid: FieldRef<"Session", 'String'>
-    readonly userId: FieldRef<"Session", 'String'>
-    readonly expire: FieldRef<"Session", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Session findUnique
-   */
-  export type SessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * Filter, which Session to fetch.
-     */
-    where: SessionWhereUniqueInput
-  }
-
-  /**
-   * Session findUniqueOrThrow
-   */
-  export type SessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * Filter, which Session to fetch.
-     */
-    where: SessionWhereUniqueInput
-  }
-
-  /**
-   * Session findFirst
-   */
-  export type SessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * Filter, which Session to fetch.
-     */
-    where?: SessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Sessions to fetch.
-     */
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Sessions.
-     */
-    cursor?: SessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Sessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Sessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Sessions.
-     */
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
-  }
-
-  /**
-   * Session findFirstOrThrow
-   */
-  export type SessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * Filter, which Session to fetch.
-     */
-    where?: SessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Sessions to fetch.
-     */
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Sessions.
-     */
-    cursor?: SessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Sessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Sessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Sessions.
-     */
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
-  }
-
-  /**
-   * Session findMany
-   */
-  export type SessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * Filter, which Sessions to fetch.
-     */
-    where?: SessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Sessions to fetch.
-     */
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Sessions.
-     */
-    cursor?: SessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Sessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Sessions.
-     */
-    skip?: number
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
-  }
-
-  /**
-   * Session create
-   */
-  export type SessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Session.
-     */
-    data: XOR<SessionCreateInput, SessionUncheckedCreateInput>
-  }
-
-  /**
-   * Session createMany
-   */
-  export type SessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Sessions.
-     */
-    data: SessionCreateManyInput | SessionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Session createManyAndReturn
-   */
-  export type SessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many Sessions.
-     */
-    data: SessionCreateManyInput | SessionCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Session update
-   */
-  export type SessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Session.
-     */
-    data: XOR<SessionUpdateInput, SessionUncheckedUpdateInput>
-    /**
-     * Choose, which Session to update.
-     */
-    where: SessionWhereUniqueInput
-  }
-
-  /**
-   * Session updateMany
-   */
-  export type SessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Sessions.
-     */
-    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyInput>
-    /**
-     * Filter which Sessions to update
-     */
-    where?: SessionWhereInput
-  }
-
-  /**
-   * Session upsert
-   */
-  export type SessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Session to update in case it exists.
-     */
-    where: SessionWhereUniqueInput
-    /**
-     * In case the Session found by the `where` argument doesn't exist, create a new Session with this data.
-     */
-    create: XOR<SessionCreateInput, SessionUncheckedCreateInput>
-    /**
-     * In case the Session was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<SessionUpdateInput, SessionUncheckedUpdateInput>
-  }
-
-  /**
-   * Session delete
-   */
-  export type SessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * Filter which Session to delete.
-     */
-    where: SessionWhereUniqueInput
-  }
-
-  /**
-   * Session deleteMany
-   */
-  export type SessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Sessions to delete
-     */
-    where?: SessionWhereInput
-  }
-
-  /**
-   * Session without action
-   */
-  export type SessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model WorkFlow
    */
 
@@ -3543,28 +2548,40 @@ export namespace Prisma {
 
   export type WorkFlowMinAggregateOutputType = {
     id: string | null
+    triggerId: string | null
+    userId: string | null
   }
 
   export type WorkFlowMaxAggregateOutputType = {
     id: string | null
+    triggerId: string | null
+    userId: string | null
   }
 
   export type WorkFlowCountAggregateOutputType = {
     id: number
+    triggerId: number
+    userId: number
     _all: number
   }
 
 
   export type WorkFlowMinAggregateInputType = {
     id?: true
+    triggerId?: true
+    userId?: true
   }
 
   export type WorkFlowMaxAggregateInputType = {
     id?: true
+    triggerId?: true
+    userId?: true
   }
 
   export type WorkFlowCountAggregateInputType = {
     id?: true
+    triggerId?: true
+    userId?: true
     _all?: true
   }
 
@@ -3642,6 +2659,8 @@ export namespace Prisma {
 
   export type WorkFlowGroupByOutputType = {
     id: string
+    triggerId: string
+    userId: string
     _count: WorkFlowCountAggregateOutputType | null
     _min: WorkFlowMinAggregateOutputType | null
     _max: WorkFlowMaxAggregateOutputType | null
@@ -3663,6 +2682,9 @@ export namespace Prisma {
 
   export type WorkFlowSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    triggerId?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     triggerNodes?: boolean | WorkFlow$triggerNodesArgs<ExtArgs>
     actionsNodes?: boolean | WorkFlow$actionsNodesArgs<ExtArgs>
     workflowRun?: boolean | WorkFlow$workflowRunArgs<ExtArgs>
@@ -3671,29 +2693,40 @@ export namespace Prisma {
 
   export type WorkFlowSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    triggerId?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workFlow"]>
 
   export type WorkFlowSelectScalar = {
     id?: boolean
+    triggerId?: boolean
+    userId?: boolean
   }
 
   export type WorkFlowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     triggerNodes?: boolean | WorkFlow$triggerNodesArgs<ExtArgs>
     actionsNodes?: boolean | WorkFlow$actionsNodesArgs<ExtArgs>
     workflowRun?: boolean | WorkFlow$workflowRunArgs<ExtArgs>
     _count?: boolean | WorkFlowCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type WorkFlowIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type WorkFlowIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $WorkFlowPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "WorkFlow"
     objects: {
+      user: Prisma.$UserPayload<ExtArgs>
       triggerNodes: Prisma.$TriggerNodesPayload<ExtArgs> | null
       actionsNodes: Prisma.$ActionNodesPayload<ExtArgs>[]
       workflowRun: Prisma.$WorkFlowRunPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      triggerId: string
+      userId: string
     }, ExtArgs["result"]["workFlow"]>
     composites: {}
   }
@@ -4058,6 +3091,7 @@ export namespace Prisma {
    */
   export interface Prisma__WorkFlowClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     triggerNodes<T extends WorkFlow$triggerNodesArgs<ExtArgs> = {}>(args?: Subset<T, WorkFlow$triggerNodesArgs<ExtArgs>>): Prisma__TriggerNodesClient<$Result.GetResult<Prisma.$TriggerNodesPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     actionsNodes<T extends WorkFlow$actionsNodesArgs<ExtArgs> = {}>(args?: Subset<T, WorkFlow$actionsNodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActionNodesPayload<ExtArgs>, T, "findMany"> | Null>
     workflowRun<T extends WorkFlow$workflowRunArgs<ExtArgs> = {}>(args?: Subset<T, WorkFlow$workflowRunArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkFlowRunPayload<ExtArgs>, T, "findMany"> | Null>
@@ -4091,6 +3125,8 @@ export namespace Prisma {
    */ 
   interface WorkFlowFieldRefs {
     readonly id: FieldRef<"WorkFlow", 'String'>
+    readonly triggerId: FieldRef<"WorkFlow", 'String'>
+    readonly userId: FieldRef<"WorkFlow", 'String'>
   }
     
 
@@ -4285,7 +3321,7 @@ export namespace Prisma {
     /**
      * The data needed to create a WorkFlow.
      */
-    data?: XOR<WorkFlowCreateInput, WorkFlowUncheckedCreateInput>
+    data: XOR<WorkFlowCreateInput, WorkFlowUncheckedCreateInput>
   }
 
   /**
@@ -4312,6 +3348,10 @@ export namespace Prisma {
      */
     data: WorkFlowCreateManyInput | WorkFlowCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkFlowIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4623,7 +3663,7 @@ export namespace Prisma {
     workflowId?: boolean
     TriggerNodeId?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
-    availableTriggerNodes?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
+    type?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["triggerNodes"]>
 
   export type TriggerNodesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4631,7 +3671,7 @@ export namespace Prisma {
     workflowId?: boolean
     TriggerNodeId?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
-    availableTriggerNodes?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
+    type?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["triggerNodes"]>
 
   export type TriggerNodesSelectScalar = {
@@ -4642,18 +3682,18 @@ export namespace Prisma {
 
   export type TriggerNodesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
-    availableTriggerNodes?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
+    type?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
   }
   export type TriggerNodesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
-    availableTriggerNodes?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
+    type?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
   }
 
   export type $TriggerNodesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "TriggerNodes"
     objects: {
       workflow: Prisma.$WorkFlowPayload<ExtArgs>
-      availableTriggerNodes: Prisma.$AvailableTriggerNodesPayload<ExtArgs>
+      type: Prisma.$AvailableTriggerNodesPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5024,7 +4064,7 @@ export namespace Prisma {
   export interface Prisma__TriggerNodesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workflow<T extends WorkFlowDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkFlowDefaultArgs<ExtArgs>>): Prisma__WorkFlowClient<$Result.GetResult<Prisma.$WorkFlowPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    availableTriggerNodes<T extends AvailableTriggerNodesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AvailableTriggerNodesDefaultArgs<ExtArgs>>): Prisma__AvailableTriggerNodesClient<$Result.GetResult<Prisma.$AvailableTriggerNodesPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    type<T extends AvailableTriggerNodesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AvailableTriggerNodesDefaultArgs<ExtArgs>>): Prisma__AvailableTriggerNodesClient<$Result.GetResult<Prisma.$AvailableTriggerNodesPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6492,7 +5532,7 @@ export namespace Prisma {
     ActionNodeId?: boolean
     sortingOrder?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
-    availableActionNodes?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
+    type?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["actionNodes"]>
 
   export type ActionNodesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6501,7 +5541,7 @@ export namespace Prisma {
     ActionNodeId?: boolean
     sortingOrder?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
-    availableActionNodes?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
+    type?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["actionNodes"]>
 
   export type ActionNodesSelectScalar = {
@@ -6513,18 +5553,18 @@ export namespace Prisma {
 
   export type ActionNodesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
-    availableActionNodes?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
+    type?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
   }
   export type ActionNodesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
-    availableActionNodes?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
+    type?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
   }
 
   export type $ActionNodesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ActionNodes"
     objects: {
       workflow: Prisma.$WorkFlowPayload<ExtArgs>
-      availableActionNodes: Prisma.$AvailableActionNodesPayload<ExtArgs>
+      type: Prisma.$AvailableActionNodesPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6896,7 +5936,7 @@ export namespace Prisma {
   export interface Prisma__ActionNodesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workflow<T extends WorkFlowDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkFlowDefaultArgs<ExtArgs>>): Prisma__WorkFlowClient<$Result.GetResult<Prisma.$WorkFlowPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    availableActionNodes<T extends AvailableActionNodesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AvailableActionNodesDefaultArgs<ExtArgs>>): Prisma__AvailableActionNodesClient<$Result.GetResult<Prisma.$AvailableActionNodesPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    type<T extends AvailableActionNodesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AvailableActionNodesDefaultArgs<ExtArgs>>): Prisma__AvailableActionNodesClient<$Result.GetResult<Prisma.$AvailableActionNodesPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10021,17 +9061,10 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-  export const SessionScalarFieldEnum: {
-    sid: 'sid',
-    userId: 'userId',
-    expire: 'expire'
-  };
-
-  export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
-
-
   export const WorkFlowScalarFieldEnum: {
-    id: 'id'
+    id: 'id',
+    triggerId: 'triggerId',
+    userId: 'userId'
   };
 
   export type WorkFlowScalarFieldEnum = (typeof WorkFlowScalarFieldEnum)[keyof typeof WorkFlowScalarFieldEnum]
@@ -10210,7 +9243,7 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    sessions?: SessionListRelationFilter
+    workflows?: WorkFlowListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -10220,7 +9253,7 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    sessions?: SessionOrderByRelationAggregateInput
+    workflows?: WorkFlowOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -10233,7 +9266,7 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    sessions?: SessionListRelationFilter
+    workflows?: WorkFlowListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -10260,56 +9293,14 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
-  export type SessionWhereInput = {
-    AND?: SessionWhereInput | SessionWhereInput[]
-    OR?: SessionWhereInput[]
-    NOT?: SessionWhereInput | SessionWhereInput[]
-    sid?: StringFilter<"Session"> | string
-    userId?: StringFilter<"Session"> | string
-    expire?: DateTimeFilter<"Session"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }
-
-  export type SessionOrderByWithRelationInput = {
-    sid?: SortOrder
-    userId?: SortOrder
-    expire?: SortOrder
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type SessionWhereUniqueInput = Prisma.AtLeast<{
-    sid?: string
-    AND?: SessionWhereInput | SessionWhereInput[]
-    OR?: SessionWhereInput[]
-    NOT?: SessionWhereInput | SessionWhereInput[]
-    userId?: StringFilter<"Session"> | string
-    expire?: DateTimeFilter<"Session"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "sid">
-
-  export type SessionOrderByWithAggregationInput = {
-    sid?: SortOrder
-    userId?: SortOrder
-    expire?: SortOrder
-    _count?: SessionCountOrderByAggregateInput
-    _max?: SessionMaxOrderByAggregateInput
-    _min?: SessionMinOrderByAggregateInput
-  }
-
-  export type SessionScalarWhereWithAggregatesInput = {
-    AND?: SessionScalarWhereWithAggregatesInput | SessionScalarWhereWithAggregatesInput[]
-    OR?: SessionScalarWhereWithAggregatesInput[]
-    NOT?: SessionScalarWhereWithAggregatesInput | SessionScalarWhereWithAggregatesInput[]
-    sid?: StringWithAggregatesFilter<"Session"> | string
-    userId?: StringWithAggregatesFilter<"Session"> | string
-    expire?: DateTimeWithAggregatesFilter<"Session"> | Date | string
-  }
-
   export type WorkFlowWhereInput = {
     AND?: WorkFlowWhereInput | WorkFlowWhereInput[]
     OR?: WorkFlowWhereInput[]
     NOT?: WorkFlowWhereInput | WorkFlowWhereInput[]
     id?: StringFilter<"WorkFlow"> | string
+    triggerId?: StringFilter<"WorkFlow"> | string
+    userId?: StringFilter<"WorkFlow"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     triggerNodes?: XOR<TriggerNodesNullableScalarRelationFilter, TriggerNodesWhereInput> | null
     actionsNodes?: ActionNodesListRelationFilter
     workflowRun?: WorkFlowRunListRelationFilter
@@ -10317,6 +9308,9 @@ export namespace Prisma {
 
   export type WorkFlowOrderByWithRelationInput = {
     id?: SortOrder
+    triggerId?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
     triggerNodes?: TriggerNodesOrderByWithRelationInput
     actionsNodes?: ActionNodesOrderByRelationAggregateInput
     workflowRun?: WorkFlowRunOrderByRelationAggregateInput
@@ -10327,6 +9321,9 @@ export namespace Prisma {
     AND?: WorkFlowWhereInput | WorkFlowWhereInput[]
     OR?: WorkFlowWhereInput[]
     NOT?: WorkFlowWhereInput | WorkFlowWhereInput[]
+    triggerId?: StringFilter<"WorkFlow"> | string
+    userId?: StringFilter<"WorkFlow"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     triggerNodes?: XOR<TriggerNodesNullableScalarRelationFilter, TriggerNodesWhereInput> | null
     actionsNodes?: ActionNodesListRelationFilter
     workflowRun?: WorkFlowRunListRelationFilter
@@ -10334,6 +9331,8 @@ export namespace Prisma {
 
   export type WorkFlowOrderByWithAggregationInput = {
     id?: SortOrder
+    triggerId?: SortOrder
+    userId?: SortOrder
     _count?: WorkFlowCountOrderByAggregateInput
     _max?: WorkFlowMaxOrderByAggregateInput
     _min?: WorkFlowMinOrderByAggregateInput
@@ -10344,6 +9343,8 @@ export namespace Prisma {
     OR?: WorkFlowScalarWhereWithAggregatesInput[]
     NOT?: WorkFlowScalarWhereWithAggregatesInput | WorkFlowScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"WorkFlow"> | string
+    triggerId?: StringWithAggregatesFilter<"WorkFlow"> | string
+    userId?: StringWithAggregatesFilter<"WorkFlow"> | string
   }
 
   export type TriggerNodesWhereInput = {
@@ -10354,7 +9355,7 @@ export namespace Prisma {
     workflowId?: StringFilter<"TriggerNodes"> | string
     TriggerNodeId?: StringFilter<"TriggerNodes"> | string
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
-    availableTriggerNodes?: XOR<AvailableTriggerNodesScalarRelationFilter, AvailableTriggerNodesWhereInput>
+    type?: XOR<AvailableTriggerNodesScalarRelationFilter, AvailableTriggerNodesWhereInput>
   }
 
   export type TriggerNodesOrderByWithRelationInput = {
@@ -10362,7 +9363,7 @@ export namespace Prisma {
     workflowId?: SortOrder
     TriggerNodeId?: SortOrder
     workflow?: WorkFlowOrderByWithRelationInput
-    availableTriggerNodes?: AvailableTriggerNodesOrderByWithRelationInput
+    type?: AvailableTriggerNodesOrderByWithRelationInput
   }
 
   export type TriggerNodesWhereUniqueInput = Prisma.AtLeast<{
@@ -10373,7 +9374,7 @@ export namespace Prisma {
     NOT?: TriggerNodesWhereInput | TriggerNodesWhereInput[]
     TriggerNodeId?: StringFilter<"TriggerNodes"> | string
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
-    availableTriggerNodes?: XOR<AvailableTriggerNodesScalarRelationFilter, AvailableTriggerNodesWhereInput>
+    type?: XOR<AvailableTriggerNodesScalarRelationFilter, AvailableTriggerNodesWhereInput>
   }, "id" | "workflowId">
 
   export type TriggerNodesOrderByWithAggregationInput = {
@@ -10443,7 +9444,7 @@ export namespace Prisma {
     ActionNodeId?: StringFilter<"ActionNodes"> | string
     sortingOrder?: IntFilter<"ActionNodes"> | number
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
-    availableActionNodes?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
+    type?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
   }
 
   export type ActionNodesOrderByWithRelationInput = {
@@ -10452,7 +9453,7 @@ export namespace Prisma {
     ActionNodeId?: SortOrder
     sortingOrder?: SortOrder
     workflow?: WorkFlowOrderByWithRelationInput
-    availableActionNodes?: AvailableActionNodesOrderByWithRelationInput
+    type?: AvailableActionNodesOrderByWithRelationInput
   }
 
   export type ActionNodesWhereUniqueInput = Prisma.AtLeast<{
@@ -10464,7 +9465,7 @@ export namespace Prisma {
     ActionNodeId?: StringFilter<"ActionNodes"> | string
     sortingOrder?: IntFilter<"ActionNodes"> | number
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
-    availableActionNodes?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
+    type?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
   }, "id">
 
   export type ActionNodesOrderByWithAggregationInput = {
@@ -10624,7 +9625,7 @@ export namespace Prisma {
     name?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    sessions?: SessionCreateNestedManyWithoutUserInput
+    workflows?: WorkFlowCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -10634,7 +9635,7 @@ export namespace Prisma {
     name?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    workflows?: WorkFlowUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -10644,7 +9645,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    sessions?: SessionUpdateManyWithoutUserNestedInput
+    workflows?: WorkFlowUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -10654,7 +9655,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    workflows?: WorkFlowUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -10684,49 +9685,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SessionCreateInput = {
-    sid: string
-    expire?: Date | string
-    user: UserCreateNestedOneWithoutSessionsInput
-  }
-
-  export type SessionUncheckedCreateInput = {
-    sid: string
-    userId: string
-    expire?: Date | string
-  }
-
-  export type SessionUpdateInput = {
-    sid?: StringFieldUpdateOperationsInput | string
-    expire?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutSessionsNestedInput
-  }
-
-  export type SessionUncheckedUpdateInput = {
-    sid?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    expire?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type SessionCreateManyInput = {
-    sid: string
-    userId: string
-    expire?: Date | string
-  }
-
-  export type SessionUpdateManyMutationInput = {
-    sid?: StringFieldUpdateOperationsInput | string
-    expire?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type SessionUncheckedUpdateManyInput = {
-    sid?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    expire?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type WorkFlowCreateInput = {
     id?: string
+    triggerId: string
+    user: UserCreateNestedOneWithoutWorkflowsInput
     triggerNodes?: TriggerNodesCreateNestedOneWithoutWorkflowInput
     actionsNodes?: ActionNodesCreateNestedManyWithoutWorkflowInput
     workflowRun?: WorkFlowRunCreateNestedManyWithoutWorkflowInput
@@ -10734,6 +9696,8 @@ export namespace Prisma {
 
   export type WorkFlowUncheckedCreateInput = {
     id?: string
+    triggerId: string
+    userId: string
     triggerNodes?: TriggerNodesUncheckedCreateNestedOneWithoutWorkflowInput
     actionsNodes?: ActionNodesUncheckedCreateNestedManyWithoutWorkflowInput
     workflowRun?: WorkFlowRunUncheckedCreateNestedManyWithoutWorkflowInput
@@ -10741,6 +9705,8 @@ export namespace Prisma {
 
   export type WorkFlowUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutWorkflowsNestedInput
     triggerNodes?: TriggerNodesUpdateOneWithoutWorkflowNestedInput
     actionsNodes?: ActionNodesUpdateManyWithoutWorkflowNestedInput
     workflowRun?: WorkFlowRunUpdateManyWithoutWorkflowNestedInput
@@ -10748,6 +9714,8 @@ export namespace Prisma {
 
   export type WorkFlowUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     triggerNodes?: TriggerNodesUncheckedUpdateOneWithoutWorkflowNestedInput
     actionsNodes?: ActionNodesUncheckedUpdateManyWithoutWorkflowNestedInput
     workflowRun?: WorkFlowRunUncheckedUpdateManyWithoutWorkflowNestedInput
@@ -10755,20 +9723,25 @@ export namespace Prisma {
 
   export type WorkFlowCreateManyInput = {
     id?: string
+    triggerId: string
+    userId: string
   }
 
   export type WorkFlowUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
   }
 
   export type WorkFlowUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type TriggerNodesCreateInput = {
     id?: string
     workflow: WorkFlowCreateNestedOneWithoutTriggerNodesInput
-    availableTriggerNodes: AvailableTriggerNodesCreateNestedOneWithoutTriggerNodeInput
+    type: AvailableTriggerNodesCreateNestedOneWithoutTriggerNodeInput
   }
 
   export type TriggerNodesUncheckedCreateInput = {
@@ -10780,7 +9753,7 @@ export namespace Prisma {
   export type TriggerNodesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflow?: WorkFlowUpdateOneRequiredWithoutTriggerNodesNestedInput
-    availableTriggerNodes?: AvailableTriggerNodesUpdateOneRequiredWithoutTriggerNodeNestedInput
+    type?: AvailableTriggerNodesUpdateOneRequiredWithoutTriggerNodeNestedInput
   }
 
   export type TriggerNodesUncheckedUpdateInput = {
@@ -10808,25 +9781,25 @@ export namespace Prisma {
   export type AvailableTriggerNodesCreateInput = {
     id?: string
     name: string
-    TriggerNode?: TriggerNodesCreateNestedManyWithoutAvailableTriggerNodesInput
+    TriggerNode?: TriggerNodesCreateNestedManyWithoutTypeInput
   }
 
   export type AvailableTriggerNodesUncheckedCreateInput = {
     id?: string
     name: string
-    TriggerNode?: TriggerNodesUncheckedCreateNestedManyWithoutAvailableTriggerNodesInput
+    TriggerNode?: TriggerNodesUncheckedCreateNestedManyWithoutTypeInput
   }
 
   export type AvailableTriggerNodesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    TriggerNode?: TriggerNodesUpdateManyWithoutAvailableTriggerNodesNestedInput
+    TriggerNode?: TriggerNodesUpdateManyWithoutTypeNestedInput
   }
 
   export type AvailableTriggerNodesUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    TriggerNode?: TriggerNodesUncheckedUpdateManyWithoutAvailableTriggerNodesNestedInput
+    TriggerNode?: TriggerNodesUncheckedUpdateManyWithoutTypeNestedInput
   }
 
   export type AvailableTriggerNodesCreateManyInput = {
@@ -10848,7 +9821,7 @@ export namespace Prisma {
     id?: string
     sortingOrder?: number
     workflow: WorkFlowCreateNestedOneWithoutActionsNodesInput
-    availableActionNodes: AvailableActionNodesCreateNestedOneWithoutActionNodesInput
+    type: AvailableActionNodesCreateNestedOneWithoutActionNodesInput
   }
 
   export type ActionNodesUncheckedCreateInput = {
@@ -10862,7 +9835,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     sortingOrder?: IntFieldUpdateOperationsInput | number
     workflow?: WorkFlowUpdateOneRequiredWithoutActionsNodesNestedInput
-    availableActionNodes?: AvailableActionNodesUpdateOneRequiredWithoutActionNodesNestedInput
+    type?: AvailableActionNodesUpdateOneRequiredWithoutActionNodesNestedInput
   }
 
   export type ActionNodesUncheckedUpdateInput = {
@@ -10894,25 +9867,25 @@ export namespace Prisma {
   export type AvailableActionNodesCreateInput = {
     id?: string
     name: string
-    actionNodes?: ActionNodesCreateNestedManyWithoutAvailableActionNodesInput
+    actionNodes?: ActionNodesCreateNestedManyWithoutTypeInput
   }
 
   export type AvailableActionNodesUncheckedCreateInput = {
     id?: string
     name: string
-    actionNodes?: ActionNodesUncheckedCreateNestedManyWithoutAvailableActionNodesInput
+    actionNodes?: ActionNodesUncheckedCreateNestedManyWithoutTypeInput
   }
 
   export type AvailableActionNodesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    actionNodes?: ActionNodesUpdateManyWithoutAvailableActionNodesNestedInput
+    actionNodes?: ActionNodesUpdateManyWithoutTypeNestedInput
   }
 
   export type AvailableActionNodesUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    actionNodes?: ActionNodesUncheckedUpdateManyWithoutAvailableActionNodesNestedInput
+    actionNodes?: ActionNodesUncheckedUpdateManyWithoutTypeNestedInput
   }
 
   export type AvailableActionNodesCreateManyInput = {
@@ -11050,10 +10023,10 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type SessionListRelationFilter = {
-    every?: SessionWhereInput
-    some?: SessionWhereInput
-    none?: SessionWhereInput
+  export type WorkFlowListRelationFilter = {
+    every?: WorkFlowWhereInput
+    some?: WorkFlowWhereInput
+    none?: WorkFlowWhereInput
   }
 
   export type SortOrderInput = {
@@ -11061,7 +10034,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type SessionOrderByRelationAggregateInput = {
+  export type WorkFlowOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -11147,24 +10120,6 @@ export namespace Prisma {
     isNot?: UserWhereInput
   }
 
-  export type SessionCountOrderByAggregateInput = {
-    sid?: SortOrder
-    userId?: SortOrder
-    expire?: SortOrder
-  }
-
-  export type SessionMaxOrderByAggregateInput = {
-    sid?: SortOrder
-    userId?: SortOrder
-    expire?: SortOrder
-  }
-
-  export type SessionMinOrderByAggregateInput = {
-    sid?: SortOrder
-    userId?: SortOrder
-    expire?: SortOrder
-  }
-
   export type TriggerNodesNullableScalarRelationFilter = {
     is?: TriggerNodesWhereInput | null
     isNot?: TriggerNodesWhereInput | null
@@ -11192,14 +10147,20 @@ export namespace Prisma {
 
   export type WorkFlowCountOrderByAggregateInput = {
     id?: SortOrder
+    triggerId?: SortOrder
+    userId?: SortOrder
   }
 
   export type WorkFlowMaxOrderByAggregateInput = {
     id?: SortOrder
+    triggerId?: SortOrder
+    userId?: SortOrder
   }
 
   export type WorkFlowMinOrderByAggregateInput = {
     id?: SortOrder
+    triggerId?: SortOrder
+    userId?: SortOrder
   }
 
   export type WorkFlowScalarRelationFilter = {
@@ -11419,18 +10380,18 @@ export namespace Prisma {
     WorkFlowRunId?: SortOrder
   }
 
-  export type SessionCreateNestedManyWithoutUserInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  export type WorkFlowCreateNestedManyWithoutUserInput = {
+    create?: XOR<WorkFlowCreateWithoutUserInput, WorkFlowUncheckedCreateWithoutUserInput> | WorkFlowCreateWithoutUserInput[] | WorkFlowUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WorkFlowCreateOrConnectWithoutUserInput | WorkFlowCreateOrConnectWithoutUserInput[]
+    createMany?: WorkFlowCreateManyUserInputEnvelope
+    connect?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
   }
 
-  export type SessionUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  export type WorkFlowUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<WorkFlowCreateWithoutUserInput, WorkFlowUncheckedCreateWithoutUserInput> | WorkFlowCreateWithoutUserInput[] | WorkFlowUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WorkFlowCreateOrConnectWithoutUserInput | WorkFlowCreateOrConnectWithoutUserInput[]
+    createMany?: WorkFlowCreateManyUserInputEnvelope
+    connect?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -11445,46 +10406,38 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type SessionUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+  export type WorkFlowUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WorkFlowCreateWithoutUserInput, WorkFlowUncheckedCreateWithoutUserInput> | WorkFlowCreateWithoutUserInput[] | WorkFlowUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WorkFlowCreateOrConnectWithoutUserInput | WorkFlowCreateOrConnectWithoutUserInput[]
+    upsert?: WorkFlowUpsertWithWhereUniqueWithoutUserInput | WorkFlowUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WorkFlowCreateManyUserInputEnvelope
+    set?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
+    disconnect?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
+    delete?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
+    connect?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
+    update?: WorkFlowUpdateWithWhereUniqueWithoutUserInput | WorkFlowUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WorkFlowUpdateManyWithWhereWithoutUserInput | WorkFlowUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WorkFlowScalarWhereInput | WorkFlowScalarWhereInput[]
   }
 
-  export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: SessionCreateManyUserInputEnvelope
-    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+  export type WorkFlowUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WorkFlowCreateWithoutUserInput, WorkFlowUncheckedCreateWithoutUserInput> | WorkFlowCreateWithoutUserInput[] | WorkFlowUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WorkFlowCreateOrConnectWithoutUserInput | WorkFlowCreateOrConnectWithoutUserInput[]
+    upsert?: WorkFlowUpsertWithWhereUniqueWithoutUserInput | WorkFlowUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WorkFlowCreateManyUserInputEnvelope
+    set?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
+    disconnect?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
+    delete?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
+    connect?: WorkFlowWhereUniqueInput | WorkFlowWhereUniqueInput[]
+    update?: WorkFlowUpdateWithWhereUniqueWithoutUserInput | WorkFlowUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WorkFlowUpdateManyWithWhereWithoutUserInput | WorkFlowUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WorkFlowScalarWhereInput | WorkFlowScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutSessionsInput = {
-    create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
+  export type UserCreateNestedOneWithoutWorkflowsInput = {
+    create?: XOR<UserCreateWithoutWorkflowsInput, UserUncheckedCreateWithoutWorkflowsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWorkflowsInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
-    create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
-    upsert?: UserUpsertWithoutSessionsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSessionsInput, UserUpdateWithoutSessionsInput>, UserUncheckedUpdateWithoutSessionsInput>
   }
 
   export type TriggerNodesCreateNestedOneWithoutWorkflowInput = {
@@ -11525,6 +10478,14 @@ export namespace Prisma {
     connectOrCreate?: WorkFlowRunCreateOrConnectWithoutWorkflowInput | WorkFlowRunCreateOrConnectWithoutWorkflowInput[]
     createMany?: WorkFlowRunCreateManyWorkflowInputEnvelope
     connect?: WorkFlowRunWhereUniqueInput | WorkFlowRunWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutWorkflowsNestedInput = {
+    create?: XOR<UserCreateWithoutWorkflowsInput, UserUncheckedCreateWithoutWorkflowsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWorkflowsInput
+    upsert?: UserUpsertWithoutWorkflowsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWorkflowsInput, UserUpdateWithoutWorkflowsInput>, UserUncheckedUpdateWithoutWorkflowsInput>
   }
 
   export type TriggerNodesUpdateOneWithoutWorkflowNestedInput = {
@@ -11631,45 +10592,45 @@ export namespace Prisma {
     update?: XOR<XOR<AvailableTriggerNodesUpdateToOneWithWhereWithoutTriggerNodeInput, AvailableTriggerNodesUpdateWithoutTriggerNodeInput>, AvailableTriggerNodesUncheckedUpdateWithoutTriggerNodeInput>
   }
 
-  export type TriggerNodesCreateNestedManyWithoutAvailableTriggerNodesInput = {
-    create?: XOR<TriggerNodesCreateWithoutAvailableTriggerNodesInput, TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput> | TriggerNodesCreateWithoutAvailableTriggerNodesInput[] | TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput[]
-    connectOrCreate?: TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput | TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput[]
-    createMany?: TriggerNodesCreateManyAvailableTriggerNodesInputEnvelope
+  export type TriggerNodesCreateNestedManyWithoutTypeInput = {
+    create?: XOR<TriggerNodesCreateWithoutTypeInput, TriggerNodesUncheckedCreateWithoutTypeInput> | TriggerNodesCreateWithoutTypeInput[] | TriggerNodesUncheckedCreateWithoutTypeInput[]
+    connectOrCreate?: TriggerNodesCreateOrConnectWithoutTypeInput | TriggerNodesCreateOrConnectWithoutTypeInput[]
+    createMany?: TriggerNodesCreateManyTypeInputEnvelope
     connect?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
   }
 
-  export type TriggerNodesUncheckedCreateNestedManyWithoutAvailableTriggerNodesInput = {
-    create?: XOR<TriggerNodesCreateWithoutAvailableTriggerNodesInput, TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput> | TriggerNodesCreateWithoutAvailableTriggerNodesInput[] | TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput[]
-    connectOrCreate?: TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput | TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput[]
-    createMany?: TriggerNodesCreateManyAvailableTriggerNodesInputEnvelope
+  export type TriggerNodesUncheckedCreateNestedManyWithoutTypeInput = {
+    create?: XOR<TriggerNodesCreateWithoutTypeInput, TriggerNodesUncheckedCreateWithoutTypeInput> | TriggerNodesCreateWithoutTypeInput[] | TriggerNodesUncheckedCreateWithoutTypeInput[]
+    connectOrCreate?: TriggerNodesCreateOrConnectWithoutTypeInput | TriggerNodesCreateOrConnectWithoutTypeInput[]
+    createMany?: TriggerNodesCreateManyTypeInputEnvelope
     connect?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
   }
 
-  export type TriggerNodesUpdateManyWithoutAvailableTriggerNodesNestedInput = {
-    create?: XOR<TriggerNodesCreateWithoutAvailableTriggerNodesInput, TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput> | TriggerNodesCreateWithoutAvailableTriggerNodesInput[] | TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput[]
-    connectOrCreate?: TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput | TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput[]
-    upsert?: TriggerNodesUpsertWithWhereUniqueWithoutAvailableTriggerNodesInput | TriggerNodesUpsertWithWhereUniqueWithoutAvailableTriggerNodesInput[]
-    createMany?: TriggerNodesCreateManyAvailableTriggerNodesInputEnvelope
+  export type TriggerNodesUpdateManyWithoutTypeNestedInput = {
+    create?: XOR<TriggerNodesCreateWithoutTypeInput, TriggerNodesUncheckedCreateWithoutTypeInput> | TriggerNodesCreateWithoutTypeInput[] | TriggerNodesUncheckedCreateWithoutTypeInput[]
+    connectOrCreate?: TriggerNodesCreateOrConnectWithoutTypeInput | TriggerNodesCreateOrConnectWithoutTypeInput[]
+    upsert?: TriggerNodesUpsertWithWhereUniqueWithoutTypeInput | TriggerNodesUpsertWithWhereUniqueWithoutTypeInput[]
+    createMany?: TriggerNodesCreateManyTypeInputEnvelope
     set?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
     disconnect?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
     delete?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
     connect?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
-    update?: TriggerNodesUpdateWithWhereUniqueWithoutAvailableTriggerNodesInput | TriggerNodesUpdateWithWhereUniqueWithoutAvailableTriggerNodesInput[]
-    updateMany?: TriggerNodesUpdateManyWithWhereWithoutAvailableTriggerNodesInput | TriggerNodesUpdateManyWithWhereWithoutAvailableTriggerNodesInput[]
+    update?: TriggerNodesUpdateWithWhereUniqueWithoutTypeInput | TriggerNodesUpdateWithWhereUniqueWithoutTypeInput[]
+    updateMany?: TriggerNodesUpdateManyWithWhereWithoutTypeInput | TriggerNodesUpdateManyWithWhereWithoutTypeInput[]
     deleteMany?: TriggerNodesScalarWhereInput | TriggerNodesScalarWhereInput[]
   }
 
-  export type TriggerNodesUncheckedUpdateManyWithoutAvailableTriggerNodesNestedInput = {
-    create?: XOR<TriggerNodesCreateWithoutAvailableTriggerNodesInput, TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput> | TriggerNodesCreateWithoutAvailableTriggerNodesInput[] | TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput[]
-    connectOrCreate?: TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput | TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput[]
-    upsert?: TriggerNodesUpsertWithWhereUniqueWithoutAvailableTriggerNodesInput | TriggerNodesUpsertWithWhereUniqueWithoutAvailableTriggerNodesInput[]
-    createMany?: TriggerNodesCreateManyAvailableTriggerNodesInputEnvelope
+  export type TriggerNodesUncheckedUpdateManyWithoutTypeNestedInput = {
+    create?: XOR<TriggerNodesCreateWithoutTypeInput, TriggerNodesUncheckedCreateWithoutTypeInput> | TriggerNodesCreateWithoutTypeInput[] | TriggerNodesUncheckedCreateWithoutTypeInput[]
+    connectOrCreate?: TriggerNodesCreateOrConnectWithoutTypeInput | TriggerNodesCreateOrConnectWithoutTypeInput[]
+    upsert?: TriggerNodesUpsertWithWhereUniqueWithoutTypeInput | TriggerNodesUpsertWithWhereUniqueWithoutTypeInput[]
+    createMany?: TriggerNodesCreateManyTypeInputEnvelope
     set?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
     disconnect?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
     delete?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
     connect?: TriggerNodesWhereUniqueInput | TriggerNodesWhereUniqueInput[]
-    update?: TriggerNodesUpdateWithWhereUniqueWithoutAvailableTriggerNodesInput | TriggerNodesUpdateWithWhereUniqueWithoutAvailableTriggerNodesInput[]
-    updateMany?: TriggerNodesUpdateManyWithWhereWithoutAvailableTriggerNodesInput | TriggerNodesUpdateManyWithWhereWithoutAvailableTriggerNodesInput[]
+    update?: TriggerNodesUpdateWithWhereUniqueWithoutTypeInput | TriggerNodesUpdateWithWhereUniqueWithoutTypeInput[]
+    updateMany?: TriggerNodesUpdateManyWithWhereWithoutTypeInput | TriggerNodesUpdateManyWithWhereWithoutTypeInput[]
     deleteMany?: TriggerNodesScalarWhereInput | TriggerNodesScalarWhereInput[]
   }
 
@@ -11709,45 +10670,45 @@ export namespace Prisma {
     update?: XOR<XOR<AvailableActionNodesUpdateToOneWithWhereWithoutActionNodesInput, AvailableActionNodesUpdateWithoutActionNodesInput>, AvailableActionNodesUncheckedUpdateWithoutActionNodesInput>
   }
 
-  export type ActionNodesCreateNestedManyWithoutAvailableActionNodesInput = {
-    create?: XOR<ActionNodesCreateWithoutAvailableActionNodesInput, ActionNodesUncheckedCreateWithoutAvailableActionNodesInput> | ActionNodesCreateWithoutAvailableActionNodesInput[] | ActionNodesUncheckedCreateWithoutAvailableActionNodesInput[]
-    connectOrCreate?: ActionNodesCreateOrConnectWithoutAvailableActionNodesInput | ActionNodesCreateOrConnectWithoutAvailableActionNodesInput[]
-    createMany?: ActionNodesCreateManyAvailableActionNodesInputEnvelope
+  export type ActionNodesCreateNestedManyWithoutTypeInput = {
+    create?: XOR<ActionNodesCreateWithoutTypeInput, ActionNodesUncheckedCreateWithoutTypeInput> | ActionNodesCreateWithoutTypeInput[] | ActionNodesUncheckedCreateWithoutTypeInput[]
+    connectOrCreate?: ActionNodesCreateOrConnectWithoutTypeInput | ActionNodesCreateOrConnectWithoutTypeInput[]
+    createMany?: ActionNodesCreateManyTypeInputEnvelope
     connect?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
   }
 
-  export type ActionNodesUncheckedCreateNestedManyWithoutAvailableActionNodesInput = {
-    create?: XOR<ActionNodesCreateWithoutAvailableActionNodesInput, ActionNodesUncheckedCreateWithoutAvailableActionNodesInput> | ActionNodesCreateWithoutAvailableActionNodesInput[] | ActionNodesUncheckedCreateWithoutAvailableActionNodesInput[]
-    connectOrCreate?: ActionNodesCreateOrConnectWithoutAvailableActionNodesInput | ActionNodesCreateOrConnectWithoutAvailableActionNodesInput[]
-    createMany?: ActionNodesCreateManyAvailableActionNodesInputEnvelope
+  export type ActionNodesUncheckedCreateNestedManyWithoutTypeInput = {
+    create?: XOR<ActionNodesCreateWithoutTypeInput, ActionNodesUncheckedCreateWithoutTypeInput> | ActionNodesCreateWithoutTypeInput[] | ActionNodesUncheckedCreateWithoutTypeInput[]
+    connectOrCreate?: ActionNodesCreateOrConnectWithoutTypeInput | ActionNodesCreateOrConnectWithoutTypeInput[]
+    createMany?: ActionNodesCreateManyTypeInputEnvelope
     connect?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
   }
 
-  export type ActionNodesUpdateManyWithoutAvailableActionNodesNestedInput = {
-    create?: XOR<ActionNodesCreateWithoutAvailableActionNodesInput, ActionNodesUncheckedCreateWithoutAvailableActionNodesInput> | ActionNodesCreateWithoutAvailableActionNodesInput[] | ActionNodesUncheckedCreateWithoutAvailableActionNodesInput[]
-    connectOrCreate?: ActionNodesCreateOrConnectWithoutAvailableActionNodesInput | ActionNodesCreateOrConnectWithoutAvailableActionNodesInput[]
-    upsert?: ActionNodesUpsertWithWhereUniqueWithoutAvailableActionNodesInput | ActionNodesUpsertWithWhereUniqueWithoutAvailableActionNodesInput[]
-    createMany?: ActionNodesCreateManyAvailableActionNodesInputEnvelope
+  export type ActionNodesUpdateManyWithoutTypeNestedInput = {
+    create?: XOR<ActionNodesCreateWithoutTypeInput, ActionNodesUncheckedCreateWithoutTypeInput> | ActionNodesCreateWithoutTypeInput[] | ActionNodesUncheckedCreateWithoutTypeInput[]
+    connectOrCreate?: ActionNodesCreateOrConnectWithoutTypeInput | ActionNodesCreateOrConnectWithoutTypeInput[]
+    upsert?: ActionNodesUpsertWithWhereUniqueWithoutTypeInput | ActionNodesUpsertWithWhereUniqueWithoutTypeInput[]
+    createMany?: ActionNodesCreateManyTypeInputEnvelope
     set?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
     disconnect?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
     delete?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
     connect?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
-    update?: ActionNodesUpdateWithWhereUniqueWithoutAvailableActionNodesInput | ActionNodesUpdateWithWhereUniqueWithoutAvailableActionNodesInput[]
-    updateMany?: ActionNodesUpdateManyWithWhereWithoutAvailableActionNodesInput | ActionNodesUpdateManyWithWhereWithoutAvailableActionNodesInput[]
+    update?: ActionNodesUpdateWithWhereUniqueWithoutTypeInput | ActionNodesUpdateWithWhereUniqueWithoutTypeInput[]
+    updateMany?: ActionNodesUpdateManyWithWhereWithoutTypeInput | ActionNodesUpdateManyWithWhereWithoutTypeInput[]
     deleteMany?: ActionNodesScalarWhereInput | ActionNodesScalarWhereInput[]
   }
 
-  export type ActionNodesUncheckedUpdateManyWithoutAvailableActionNodesNestedInput = {
-    create?: XOR<ActionNodesCreateWithoutAvailableActionNodesInput, ActionNodesUncheckedCreateWithoutAvailableActionNodesInput> | ActionNodesCreateWithoutAvailableActionNodesInput[] | ActionNodesUncheckedCreateWithoutAvailableActionNodesInput[]
-    connectOrCreate?: ActionNodesCreateOrConnectWithoutAvailableActionNodesInput | ActionNodesCreateOrConnectWithoutAvailableActionNodesInput[]
-    upsert?: ActionNodesUpsertWithWhereUniqueWithoutAvailableActionNodesInput | ActionNodesUpsertWithWhereUniqueWithoutAvailableActionNodesInput[]
-    createMany?: ActionNodesCreateManyAvailableActionNodesInputEnvelope
+  export type ActionNodesUncheckedUpdateManyWithoutTypeNestedInput = {
+    create?: XOR<ActionNodesCreateWithoutTypeInput, ActionNodesUncheckedCreateWithoutTypeInput> | ActionNodesCreateWithoutTypeInput[] | ActionNodesUncheckedCreateWithoutTypeInput[]
+    connectOrCreate?: ActionNodesCreateOrConnectWithoutTypeInput | ActionNodesCreateOrConnectWithoutTypeInput[]
+    upsert?: ActionNodesUpsertWithWhereUniqueWithoutTypeInput | ActionNodesUpsertWithWhereUniqueWithoutTypeInput[]
+    createMany?: ActionNodesCreateManyTypeInputEnvelope
     set?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
     disconnect?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
     delete?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
     connect?: ActionNodesWhereUniqueInput | ActionNodesWhereUniqueInput[]
-    update?: ActionNodesUpdateWithWhereUniqueWithoutAvailableActionNodesInput | ActionNodesUpdateWithWhereUniqueWithoutAvailableActionNodesInput[]
-    updateMany?: ActionNodesUpdateManyWithWhereWithoutAvailableActionNodesInput | ActionNodesUpdateManyWithWhereWithoutAvailableActionNodesInput[]
+    update?: ActionNodesUpdateWithWhereUniqueWithoutTypeInput | ActionNodesUpdateWithWhereUniqueWithoutTypeInput[]
+    updateMany?: ActionNodesUpdateManyWithWhereWithoutTypeInput | ActionNodesUpdateManyWithWhereWithoutTypeInput[]
     deleteMany?: ActionNodesScalarWhereInput | ActionNodesScalarWhereInput[]
   }
 
@@ -11969,52 +10930,58 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type SessionCreateWithoutUserInput = {
-    sid: string
-    expire?: Date | string
+  export type WorkFlowCreateWithoutUserInput = {
+    id?: string
+    triggerId: string
+    triggerNodes?: TriggerNodesCreateNestedOneWithoutWorkflowInput
+    actionsNodes?: ActionNodesCreateNestedManyWithoutWorkflowInput
+    workflowRun?: WorkFlowRunCreateNestedManyWithoutWorkflowInput
   }
 
-  export type SessionUncheckedCreateWithoutUserInput = {
-    sid: string
-    expire?: Date | string
+  export type WorkFlowUncheckedCreateWithoutUserInput = {
+    id?: string
+    triggerId: string
+    triggerNodes?: TriggerNodesUncheckedCreateNestedOneWithoutWorkflowInput
+    actionsNodes?: ActionNodesUncheckedCreateNestedManyWithoutWorkflowInput
+    workflowRun?: WorkFlowRunUncheckedCreateNestedManyWithoutWorkflowInput
   }
 
-  export type SessionCreateOrConnectWithoutUserInput = {
-    where: SessionWhereUniqueInput
-    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
+  export type WorkFlowCreateOrConnectWithoutUserInput = {
+    where: WorkFlowWhereUniqueInput
+    create: XOR<WorkFlowCreateWithoutUserInput, WorkFlowUncheckedCreateWithoutUserInput>
   }
 
-  export type SessionCreateManyUserInputEnvelope = {
-    data: SessionCreateManyUserInput | SessionCreateManyUserInput[]
+  export type WorkFlowCreateManyUserInputEnvelope = {
+    data: WorkFlowCreateManyUserInput | WorkFlowCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
-  export type SessionUpsertWithWhereUniqueWithoutUserInput = {
-    where: SessionWhereUniqueInput
-    update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
-    create: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput>
+  export type WorkFlowUpsertWithWhereUniqueWithoutUserInput = {
+    where: WorkFlowWhereUniqueInput
+    update: XOR<WorkFlowUpdateWithoutUserInput, WorkFlowUncheckedUpdateWithoutUserInput>
+    create: XOR<WorkFlowCreateWithoutUserInput, WorkFlowUncheckedCreateWithoutUserInput>
   }
 
-  export type SessionUpdateWithWhereUniqueWithoutUserInput = {
-    where: SessionWhereUniqueInput
-    data: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
+  export type WorkFlowUpdateWithWhereUniqueWithoutUserInput = {
+    where: WorkFlowWhereUniqueInput
+    data: XOR<WorkFlowUpdateWithoutUserInput, WorkFlowUncheckedUpdateWithoutUserInput>
   }
 
-  export type SessionUpdateManyWithWhereWithoutUserInput = {
-    where: SessionScalarWhereInput
-    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyWithoutUserInput>
+  export type WorkFlowUpdateManyWithWhereWithoutUserInput = {
+    where: WorkFlowScalarWhereInput
+    data: XOR<WorkFlowUpdateManyMutationInput, WorkFlowUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type SessionScalarWhereInput = {
-    AND?: SessionScalarWhereInput | SessionScalarWhereInput[]
-    OR?: SessionScalarWhereInput[]
-    NOT?: SessionScalarWhereInput | SessionScalarWhereInput[]
-    sid?: StringFilter<"Session"> | string
-    userId?: StringFilter<"Session"> | string
-    expire?: DateTimeFilter<"Session"> | Date | string
+  export type WorkFlowScalarWhereInput = {
+    AND?: WorkFlowScalarWhereInput | WorkFlowScalarWhereInput[]
+    OR?: WorkFlowScalarWhereInput[]
+    NOT?: WorkFlowScalarWhereInput | WorkFlowScalarWhereInput[]
+    id?: StringFilter<"WorkFlow"> | string
+    triggerId?: StringFilter<"WorkFlow"> | string
+    userId?: StringFilter<"WorkFlow"> | string
   }
 
-  export type UserCreateWithoutSessionsInput = {
+  export type UserCreateWithoutWorkflowsInput = {
     id?: string
     email: string
     password: string
@@ -12023,7 +10990,7 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type UserUncheckedCreateWithoutSessionsInput = {
+  export type UserUncheckedCreateWithoutWorkflowsInput = {
     id?: string
     email: string
     password: string
@@ -12032,43 +10999,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type UserCreateOrConnectWithoutSessionsInput = {
+  export type UserCreateOrConnectWithoutWorkflowsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
-  }
-
-  export type UserUpsertWithoutSessionsInput = {
-    update: XOR<UserUpdateWithoutSessionsInput, UserUncheckedUpdateWithoutSessionsInput>
-    create: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutSessionsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutSessionsInput, UserUncheckedUpdateWithoutSessionsInput>
-  }
-
-  export type UserUpdateWithoutSessionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserUncheckedUpdateWithoutSessionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    create: XOR<UserCreateWithoutWorkflowsInput, UserUncheckedCreateWithoutWorkflowsInput>
   }
 
   export type TriggerNodesCreateWithoutWorkflowInput = {
     id?: string
-    availableTriggerNodes: AvailableTriggerNodesCreateNestedOneWithoutTriggerNodeInput
+    type: AvailableTriggerNodesCreateNestedOneWithoutTriggerNodeInput
   }
 
   export type TriggerNodesUncheckedCreateWithoutWorkflowInput = {
@@ -12084,7 +11022,7 @@ export namespace Prisma {
   export type ActionNodesCreateWithoutWorkflowInput = {
     id?: string
     sortingOrder?: number
-    availableActionNodes: AvailableActionNodesCreateNestedOneWithoutActionNodesInput
+    type: AvailableActionNodesCreateNestedOneWithoutActionNodesInput
   }
 
   export type ActionNodesUncheckedCreateWithoutWorkflowInput = {
@@ -12125,6 +11063,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserUpsertWithoutWorkflowsInput = {
+    update: XOR<UserUpdateWithoutWorkflowsInput, UserUncheckedUpdateWithoutWorkflowsInput>
+    create: XOR<UserCreateWithoutWorkflowsInput, UserUncheckedCreateWithoutWorkflowsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutWorkflowsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutWorkflowsInput, UserUncheckedUpdateWithoutWorkflowsInput>
+  }
+
+  export type UserUpdateWithoutWorkflowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutWorkflowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TriggerNodesUpsertWithoutWorkflowInput = {
     update: XOR<TriggerNodesUpdateWithoutWorkflowInput, TriggerNodesUncheckedUpdateWithoutWorkflowInput>
     create: XOR<TriggerNodesCreateWithoutWorkflowInput, TriggerNodesUncheckedCreateWithoutWorkflowInput>
@@ -12138,7 +11105,7 @@ export namespace Prisma {
 
   export type TriggerNodesUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
-    availableTriggerNodes?: AvailableTriggerNodesUpdateOneRequiredWithoutTriggerNodeNestedInput
+    type?: AvailableTriggerNodesUpdateOneRequiredWithoutTriggerNodeNestedInput
   }
 
   export type TriggerNodesUncheckedUpdateWithoutWorkflowInput = {
@@ -12199,12 +11166,16 @@ export namespace Prisma {
 
   export type WorkFlowCreateWithoutTriggerNodesInput = {
     id?: string
+    triggerId: string
+    user: UserCreateNestedOneWithoutWorkflowsInput
     actionsNodes?: ActionNodesCreateNestedManyWithoutWorkflowInput
     workflowRun?: WorkFlowRunCreateNestedManyWithoutWorkflowInput
   }
 
   export type WorkFlowUncheckedCreateWithoutTriggerNodesInput = {
     id?: string
+    triggerId: string
+    userId: string
     actionsNodes?: ActionNodesUncheckedCreateNestedManyWithoutWorkflowInput
     workflowRun?: WorkFlowRunUncheckedCreateNestedManyWithoutWorkflowInput
   }
@@ -12242,12 +11213,16 @@ export namespace Prisma {
 
   export type WorkFlowUpdateWithoutTriggerNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutWorkflowsNestedInput
     actionsNodes?: ActionNodesUpdateManyWithoutWorkflowNestedInput
     workflowRun?: WorkFlowRunUpdateManyWithoutWorkflowNestedInput
   }
 
   export type WorkFlowUncheckedUpdateWithoutTriggerNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     actionsNodes?: ActionNodesUncheckedUpdateManyWithoutWorkflowNestedInput
     workflowRun?: WorkFlowRunUncheckedUpdateManyWithoutWorkflowNestedInput
   }
@@ -12273,40 +11248,40 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
   }
 
-  export type TriggerNodesCreateWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesCreateWithoutTypeInput = {
     id?: string
     workflow: WorkFlowCreateNestedOneWithoutTriggerNodesInput
   }
 
-  export type TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesUncheckedCreateWithoutTypeInput = {
     id?: string
     workflowId: string
   }
 
-  export type TriggerNodesCreateOrConnectWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesCreateOrConnectWithoutTypeInput = {
     where: TriggerNodesWhereUniqueInput
-    create: XOR<TriggerNodesCreateWithoutAvailableTriggerNodesInput, TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput>
+    create: XOR<TriggerNodesCreateWithoutTypeInput, TriggerNodesUncheckedCreateWithoutTypeInput>
   }
 
-  export type TriggerNodesCreateManyAvailableTriggerNodesInputEnvelope = {
-    data: TriggerNodesCreateManyAvailableTriggerNodesInput | TriggerNodesCreateManyAvailableTriggerNodesInput[]
+  export type TriggerNodesCreateManyTypeInputEnvelope = {
+    data: TriggerNodesCreateManyTypeInput | TriggerNodesCreateManyTypeInput[]
     skipDuplicates?: boolean
   }
 
-  export type TriggerNodesUpsertWithWhereUniqueWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesUpsertWithWhereUniqueWithoutTypeInput = {
     where: TriggerNodesWhereUniqueInput
-    update: XOR<TriggerNodesUpdateWithoutAvailableTriggerNodesInput, TriggerNodesUncheckedUpdateWithoutAvailableTriggerNodesInput>
-    create: XOR<TriggerNodesCreateWithoutAvailableTriggerNodesInput, TriggerNodesUncheckedCreateWithoutAvailableTriggerNodesInput>
+    update: XOR<TriggerNodesUpdateWithoutTypeInput, TriggerNodesUncheckedUpdateWithoutTypeInput>
+    create: XOR<TriggerNodesCreateWithoutTypeInput, TriggerNodesUncheckedCreateWithoutTypeInput>
   }
 
-  export type TriggerNodesUpdateWithWhereUniqueWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesUpdateWithWhereUniqueWithoutTypeInput = {
     where: TriggerNodesWhereUniqueInput
-    data: XOR<TriggerNodesUpdateWithoutAvailableTriggerNodesInput, TriggerNodesUncheckedUpdateWithoutAvailableTriggerNodesInput>
+    data: XOR<TriggerNodesUpdateWithoutTypeInput, TriggerNodesUncheckedUpdateWithoutTypeInput>
   }
 
-  export type TriggerNodesUpdateManyWithWhereWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesUpdateManyWithWhereWithoutTypeInput = {
     where: TriggerNodesScalarWhereInput
-    data: XOR<TriggerNodesUpdateManyMutationInput, TriggerNodesUncheckedUpdateManyWithoutAvailableTriggerNodesInput>
+    data: XOR<TriggerNodesUpdateManyMutationInput, TriggerNodesUncheckedUpdateManyWithoutTypeInput>
   }
 
   export type TriggerNodesScalarWhereInput = {
@@ -12320,12 +11295,16 @@ export namespace Prisma {
 
   export type WorkFlowCreateWithoutActionsNodesInput = {
     id?: string
+    triggerId: string
+    user: UserCreateNestedOneWithoutWorkflowsInput
     triggerNodes?: TriggerNodesCreateNestedOneWithoutWorkflowInput
     workflowRun?: WorkFlowRunCreateNestedManyWithoutWorkflowInput
   }
 
   export type WorkFlowUncheckedCreateWithoutActionsNodesInput = {
     id?: string
+    triggerId: string
+    userId: string
     triggerNodes?: TriggerNodesUncheckedCreateNestedOneWithoutWorkflowInput
     workflowRun?: WorkFlowRunUncheckedCreateNestedManyWithoutWorkflowInput
   }
@@ -12363,12 +11342,16 @@ export namespace Prisma {
 
   export type WorkFlowUpdateWithoutActionsNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutWorkflowsNestedInput
     triggerNodes?: TriggerNodesUpdateOneWithoutWorkflowNestedInput
     workflowRun?: WorkFlowRunUpdateManyWithoutWorkflowNestedInput
   }
 
   export type WorkFlowUncheckedUpdateWithoutActionsNodesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     triggerNodes?: TriggerNodesUncheckedUpdateOneWithoutWorkflowNestedInput
     workflowRun?: WorkFlowRunUncheckedUpdateManyWithoutWorkflowNestedInput
   }
@@ -12394,52 +11377,56 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
   }
 
-  export type ActionNodesCreateWithoutAvailableActionNodesInput = {
+  export type ActionNodesCreateWithoutTypeInput = {
     id?: string
     sortingOrder?: number
     workflow: WorkFlowCreateNestedOneWithoutActionsNodesInput
   }
 
-  export type ActionNodesUncheckedCreateWithoutAvailableActionNodesInput = {
+  export type ActionNodesUncheckedCreateWithoutTypeInput = {
     id?: string
     workflowId: string
     sortingOrder?: number
   }
 
-  export type ActionNodesCreateOrConnectWithoutAvailableActionNodesInput = {
+  export type ActionNodesCreateOrConnectWithoutTypeInput = {
     where: ActionNodesWhereUniqueInput
-    create: XOR<ActionNodesCreateWithoutAvailableActionNodesInput, ActionNodesUncheckedCreateWithoutAvailableActionNodesInput>
+    create: XOR<ActionNodesCreateWithoutTypeInput, ActionNodesUncheckedCreateWithoutTypeInput>
   }
 
-  export type ActionNodesCreateManyAvailableActionNodesInputEnvelope = {
-    data: ActionNodesCreateManyAvailableActionNodesInput | ActionNodesCreateManyAvailableActionNodesInput[]
+  export type ActionNodesCreateManyTypeInputEnvelope = {
+    data: ActionNodesCreateManyTypeInput | ActionNodesCreateManyTypeInput[]
     skipDuplicates?: boolean
   }
 
-  export type ActionNodesUpsertWithWhereUniqueWithoutAvailableActionNodesInput = {
+  export type ActionNodesUpsertWithWhereUniqueWithoutTypeInput = {
     where: ActionNodesWhereUniqueInput
-    update: XOR<ActionNodesUpdateWithoutAvailableActionNodesInput, ActionNodesUncheckedUpdateWithoutAvailableActionNodesInput>
-    create: XOR<ActionNodesCreateWithoutAvailableActionNodesInput, ActionNodesUncheckedCreateWithoutAvailableActionNodesInput>
+    update: XOR<ActionNodesUpdateWithoutTypeInput, ActionNodesUncheckedUpdateWithoutTypeInput>
+    create: XOR<ActionNodesCreateWithoutTypeInput, ActionNodesUncheckedCreateWithoutTypeInput>
   }
 
-  export type ActionNodesUpdateWithWhereUniqueWithoutAvailableActionNodesInput = {
+  export type ActionNodesUpdateWithWhereUniqueWithoutTypeInput = {
     where: ActionNodesWhereUniqueInput
-    data: XOR<ActionNodesUpdateWithoutAvailableActionNodesInput, ActionNodesUncheckedUpdateWithoutAvailableActionNodesInput>
+    data: XOR<ActionNodesUpdateWithoutTypeInput, ActionNodesUncheckedUpdateWithoutTypeInput>
   }
 
-  export type ActionNodesUpdateManyWithWhereWithoutAvailableActionNodesInput = {
+  export type ActionNodesUpdateManyWithWhereWithoutTypeInput = {
     where: ActionNodesScalarWhereInput
-    data: XOR<ActionNodesUpdateManyMutationInput, ActionNodesUncheckedUpdateManyWithoutAvailableActionNodesInput>
+    data: XOR<ActionNodesUpdateManyMutationInput, ActionNodesUncheckedUpdateManyWithoutTypeInput>
   }
 
   export type WorkFlowCreateWithoutWorkflowRunInput = {
     id?: string
+    triggerId: string
+    user: UserCreateNestedOneWithoutWorkflowsInput
     triggerNodes?: TriggerNodesCreateNestedOneWithoutWorkflowInput
     actionsNodes?: ActionNodesCreateNestedManyWithoutWorkflowInput
   }
 
   export type WorkFlowUncheckedCreateWithoutWorkflowRunInput = {
     id?: string
+    triggerId: string
+    userId: string
     triggerNodes?: TriggerNodesUncheckedCreateNestedOneWithoutWorkflowInput
     actionsNodes?: ActionNodesUncheckedCreateNestedManyWithoutWorkflowInput
   }
@@ -12475,12 +11462,16 @@ export namespace Prisma {
 
   export type WorkFlowUpdateWithoutWorkflowRunInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutWorkflowsNestedInput
     triggerNodes?: TriggerNodesUpdateOneWithoutWorkflowNestedInput
     actionsNodes?: ActionNodesUpdateManyWithoutWorkflowNestedInput
   }
 
   export type WorkFlowUncheckedUpdateWithoutWorkflowRunInput = {
     id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     triggerNodes?: TriggerNodesUncheckedUpdateOneWithoutWorkflowNestedInput
     actionsNodes?: ActionNodesUncheckedUpdateManyWithoutWorkflowNestedInput
   }
@@ -12544,24 +11535,30 @@ export namespace Prisma {
     meta?: JsonNullValueInput | InputJsonValue
   }
 
-  export type SessionCreateManyUserInput = {
-    sid: string
-    expire?: Date | string
+  export type WorkFlowCreateManyUserInput = {
+    id?: string
+    triggerId: string
   }
 
-  export type SessionUpdateWithoutUserInput = {
-    sid?: StringFieldUpdateOperationsInput | string
-    expire?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type WorkFlowUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    triggerNodes?: TriggerNodesUpdateOneWithoutWorkflowNestedInput
+    actionsNodes?: ActionNodesUpdateManyWithoutWorkflowNestedInput
+    workflowRun?: WorkFlowRunUpdateManyWithoutWorkflowNestedInput
   }
 
-  export type SessionUncheckedUpdateWithoutUserInput = {
-    sid?: StringFieldUpdateOperationsInput | string
-    expire?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type WorkFlowUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
+    triggerNodes?: TriggerNodesUncheckedUpdateOneWithoutWorkflowNestedInput
+    actionsNodes?: ActionNodesUncheckedUpdateManyWithoutWorkflowNestedInput
+    workflowRun?: WorkFlowRunUncheckedUpdateManyWithoutWorkflowNestedInput
   }
 
-  export type SessionUncheckedUpdateManyWithoutUserInput = {
-    sid?: StringFieldUpdateOperationsInput | string
-    expire?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type WorkFlowUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    triggerId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ActionNodesCreateManyWorkflowInput = {
@@ -12578,7 +11575,7 @@ export namespace Prisma {
   export type ActionNodesUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     sortingOrder?: IntFieldUpdateOperationsInput | number
-    availableActionNodes?: AvailableActionNodesUpdateOneRequiredWithoutActionNodesNestedInput
+    type?: AvailableActionNodesUpdateOneRequiredWithoutActionNodesNestedInput
   }
 
   export type ActionNodesUncheckedUpdateWithoutWorkflowInput = {
@@ -12610,45 +11607,45 @@ export namespace Prisma {
     meta?: JsonNullValueInput | InputJsonValue
   }
 
-  export type TriggerNodesCreateManyAvailableTriggerNodesInput = {
+  export type TriggerNodesCreateManyTypeInput = {
     id?: string
     workflowId: string
   }
 
-  export type TriggerNodesUpdateWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesUpdateWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflow?: WorkFlowUpdateOneRequiredWithoutTriggerNodesNestedInput
   }
 
-  export type TriggerNodesUncheckedUpdateWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesUncheckedUpdateWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type TriggerNodesUncheckedUpdateManyWithoutAvailableTriggerNodesInput = {
+  export type TriggerNodesUncheckedUpdateManyWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type ActionNodesCreateManyAvailableActionNodesInput = {
+  export type ActionNodesCreateManyTypeInput = {
     id?: string
     workflowId: string
     sortingOrder?: number
   }
 
-  export type ActionNodesUpdateWithoutAvailableActionNodesInput = {
+  export type ActionNodesUpdateWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     sortingOrder?: IntFieldUpdateOperationsInput | number
     workflow?: WorkFlowUpdateOneRequiredWithoutActionsNodesNestedInput
   }
 
-  export type ActionNodesUncheckedUpdateWithoutAvailableActionNodesInput = {
+  export type ActionNodesUncheckedUpdateWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ActionNodesUncheckedUpdateManyWithoutAvailableActionNodesInput = {
+  export type ActionNodesUncheckedUpdateManyWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     sortingOrder?: IntFieldUpdateOperationsInput | number
