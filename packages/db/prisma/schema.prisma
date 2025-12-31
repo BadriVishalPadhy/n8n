@@ -35,6 +35,7 @@ model Session {
 
 model WorkFlow {
   id           String        @id @default(uuid())
+  triggerId    String
   triggerNodes TriggerNodes?
   actionsNodes ActionNodes[]
   workflowRun  WorkFlowRun[]
