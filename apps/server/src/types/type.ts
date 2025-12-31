@@ -10,3 +10,14 @@ export const signinSchema = z.object({
   email: z.string(),
   password: z.string(),
 });
+
+export const nodeCreateSchema = z.object({
+  availableTriggerId: z.string(),
+  triggerMeta: z.any().optional(),
+  actions: z.array(
+    z.object({
+      availableActionId: z.string(),
+      actionMeta: z.any().optional(),
+    }),
+  ),
+});
