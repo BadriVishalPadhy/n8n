@@ -3539,6 +3539,7 @@ export namespace Prisma {
   export type TriggerNodesCountAggregateOutputType = {
     id: number
     workflowId: number
+    metadata: number
     TriggerNodeId: number
     _all: number
   }
@@ -3559,6 +3560,7 @@ export namespace Prisma {
   export type TriggerNodesCountAggregateInputType = {
     id?: true
     workflowId?: true
+    metadata?: true
     TriggerNodeId?: true
     _all?: true
   }
@@ -3638,6 +3640,7 @@ export namespace Prisma {
   export type TriggerNodesGroupByOutputType = {
     id: string
     workflowId: string
+    metadata: JsonValue
     TriggerNodeId: string
     _count: TriggerNodesCountAggregateOutputType | null
     _min: TriggerNodesMinAggregateOutputType | null
@@ -3661,6 +3664,7 @@ export namespace Prisma {
   export type TriggerNodesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     workflowId?: boolean
+    metadata?: boolean
     TriggerNodeId?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
     type?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
@@ -3669,6 +3673,7 @@ export namespace Prisma {
   export type TriggerNodesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     workflowId?: boolean
+    metadata?: boolean
     TriggerNodeId?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
     type?: boolean | AvailableTriggerNodesDefaultArgs<ExtArgs>
@@ -3677,6 +3682,7 @@ export namespace Prisma {
   export type TriggerNodesSelectScalar = {
     id?: boolean
     workflowId?: boolean
+    metadata?: boolean
     TriggerNodeId?: boolean
   }
 
@@ -3698,6 +3704,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       workflowId: string
+      metadata: Prisma.JsonValue
       TriggerNodeId: string
     }, ExtArgs["result"]["triggerNodes"]>
     composites: {}
@@ -4096,6 +4103,7 @@ export namespace Prisma {
   interface TriggerNodesFieldRefs {
     readonly id: FieldRef<"TriggerNodes", 'String'>
     readonly workflowId: FieldRef<"TriggerNodes", 'String'>
+    readonly metadata: FieldRef<"TriggerNodes", 'Json'>
     readonly TriggerNodeId: FieldRef<"TriggerNodes", 'String'>
   }
     
@@ -5379,6 +5387,7 @@ export namespace Prisma {
     id: number
     workflowId: number
     ActionNodeId: number
+    metadata: number
     sortingOrder: number
     _all: number
   }
@@ -5410,6 +5419,7 @@ export namespace Prisma {
     id?: true
     workflowId?: true
     ActionNodeId?: true
+    metadata?: true
     sortingOrder?: true
     _all?: true
   }
@@ -5504,6 +5514,7 @@ export namespace Prisma {
     id: string
     workflowId: string
     ActionNodeId: string
+    metadata: JsonValue
     sortingOrder: number
     _count: ActionNodesCountAggregateOutputType | null
     _avg: ActionNodesAvgAggregateOutputType | null
@@ -5530,6 +5541,7 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     ActionNodeId?: boolean
+    metadata?: boolean
     sortingOrder?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
     type?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
@@ -5539,6 +5551,7 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     ActionNodeId?: boolean
+    metadata?: boolean
     sortingOrder?: boolean
     workflow?: boolean | WorkFlowDefaultArgs<ExtArgs>
     type?: boolean | AvailableActionNodesDefaultArgs<ExtArgs>
@@ -5548,6 +5561,7 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     ActionNodeId?: boolean
+    metadata?: boolean
     sortingOrder?: boolean
   }
 
@@ -5570,6 +5584,7 @@ export namespace Prisma {
       id: string
       workflowId: string
       ActionNodeId: string
+      metadata: Prisma.JsonValue
       sortingOrder: number
     }, ExtArgs["result"]["actionNodes"]>
     composites: {}
@@ -5969,6 +5984,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ActionNodes", 'String'>
     readonly workflowId: FieldRef<"ActionNodes", 'String'>
     readonly ActionNodeId: FieldRef<"ActionNodes", 'String'>
+    readonly metadata: FieldRef<"ActionNodes", 'Json'>
     readonly sortingOrder: FieldRef<"ActionNodes", 'Int'>
   }
     
@@ -9073,6 +9089,7 @@ export namespace Prisma {
   export const TriggerNodesScalarFieldEnum: {
     id: 'id',
     workflowId: 'workflowId',
+    metadata: 'metadata',
     TriggerNodeId: 'TriggerNodeId'
   };
 
@@ -9091,6 +9108,7 @@ export namespace Prisma {
     id: 'id',
     workflowId: 'workflowId',
     ActionNodeId: 'ActionNodeId',
+    metadata: 'metadata',
     sortingOrder: 'sortingOrder'
   };
 
@@ -9196,6 +9214,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -9206,13 +9231,6 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
     
 
 
@@ -9353,6 +9371,7 @@ export namespace Prisma {
     NOT?: TriggerNodesWhereInput | TriggerNodesWhereInput[]
     id?: StringFilter<"TriggerNodes"> | string
     workflowId?: StringFilter<"TriggerNodes"> | string
+    metadata?: JsonFilter<"TriggerNodes">
     TriggerNodeId?: StringFilter<"TriggerNodes"> | string
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
     type?: XOR<AvailableTriggerNodesScalarRelationFilter, AvailableTriggerNodesWhereInput>
@@ -9361,6 +9380,7 @@ export namespace Prisma {
   export type TriggerNodesOrderByWithRelationInput = {
     id?: SortOrder
     workflowId?: SortOrder
+    metadata?: SortOrder
     TriggerNodeId?: SortOrder
     workflow?: WorkFlowOrderByWithRelationInput
     type?: AvailableTriggerNodesOrderByWithRelationInput
@@ -9372,6 +9392,7 @@ export namespace Prisma {
     AND?: TriggerNodesWhereInput | TriggerNodesWhereInput[]
     OR?: TriggerNodesWhereInput[]
     NOT?: TriggerNodesWhereInput | TriggerNodesWhereInput[]
+    metadata?: JsonFilter<"TriggerNodes">
     TriggerNodeId?: StringFilter<"TriggerNodes"> | string
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
     type?: XOR<AvailableTriggerNodesScalarRelationFilter, AvailableTriggerNodesWhereInput>
@@ -9380,6 +9401,7 @@ export namespace Prisma {
   export type TriggerNodesOrderByWithAggregationInput = {
     id?: SortOrder
     workflowId?: SortOrder
+    metadata?: SortOrder
     TriggerNodeId?: SortOrder
     _count?: TriggerNodesCountOrderByAggregateInput
     _max?: TriggerNodesMaxOrderByAggregateInput
@@ -9392,6 +9414,7 @@ export namespace Prisma {
     NOT?: TriggerNodesScalarWhereWithAggregatesInput | TriggerNodesScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"TriggerNodes"> | string
     workflowId?: StringWithAggregatesFilter<"TriggerNodes"> | string
+    metadata?: JsonWithAggregatesFilter<"TriggerNodes">
     TriggerNodeId?: StringWithAggregatesFilter<"TriggerNodes"> | string
   }
 
@@ -9442,6 +9465,7 @@ export namespace Prisma {
     id?: StringFilter<"ActionNodes"> | string
     workflowId?: StringFilter<"ActionNodes"> | string
     ActionNodeId?: StringFilter<"ActionNodes"> | string
+    metadata?: JsonFilter<"ActionNodes">
     sortingOrder?: IntFilter<"ActionNodes"> | number
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
     type?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
@@ -9451,6 +9475,7 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     ActionNodeId?: SortOrder
+    metadata?: SortOrder
     sortingOrder?: SortOrder
     workflow?: WorkFlowOrderByWithRelationInput
     type?: AvailableActionNodesOrderByWithRelationInput
@@ -9463,6 +9488,7 @@ export namespace Prisma {
     NOT?: ActionNodesWhereInput | ActionNodesWhereInput[]
     workflowId?: StringFilter<"ActionNodes"> | string
     ActionNodeId?: StringFilter<"ActionNodes"> | string
+    metadata?: JsonFilter<"ActionNodes">
     sortingOrder?: IntFilter<"ActionNodes"> | number
     workflow?: XOR<WorkFlowScalarRelationFilter, WorkFlowWhereInput>
     type?: XOR<AvailableActionNodesScalarRelationFilter, AvailableActionNodesWhereInput>
@@ -9472,6 +9498,7 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     ActionNodeId?: SortOrder
+    metadata?: SortOrder
     sortingOrder?: SortOrder
     _count?: ActionNodesCountOrderByAggregateInput
     _avg?: ActionNodesAvgOrderByAggregateInput
@@ -9487,6 +9514,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ActionNodes"> | string
     workflowId?: StringWithAggregatesFilter<"ActionNodes"> | string
     ActionNodeId?: StringWithAggregatesFilter<"ActionNodes"> | string
+    metadata?: JsonWithAggregatesFilter<"ActionNodes">
     sortingOrder?: IntWithAggregatesFilter<"ActionNodes"> | number
   }
 
@@ -9740,6 +9768,7 @@ export namespace Prisma {
 
   export type TriggerNodesCreateInput = {
     id?: string
+    metadata?: JsonNullValueInput | InputJsonValue
     workflow: WorkFlowCreateNestedOneWithoutTriggerNodesInput
     type: AvailableTriggerNodesCreateNestedOneWithoutTriggerNodeInput
   }
@@ -9747,11 +9776,13 @@ export namespace Prisma {
   export type TriggerNodesUncheckedCreateInput = {
     id?: string
     workflowId: string
+    metadata?: JsonNullValueInput | InputJsonValue
     TriggerNodeId: string
   }
 
   export type TriggerNodesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     workflow?: WorkFlowUpdateOneRequiredWithoutTriggerNodesNestedInput
     type?: AvailableTriggerNodesUpdateOneRequiredWithoutTriggerNodeNestedInput
   }
@@ -9759,22 +9790,26 @@ export namespace Prisma {
   export type TriggerNodesUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     TriggerNodeId?: StringFieldUpdateOperationsInput | string
   }
 
   export type TriggerNodesCreateManyInput = {
     id?: string
     workflowId: string
+    metadata?: JsonNullValueInput | InputJsonValue
     TriggerNodeId: string
   }
 
   export type TriggerNodesUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
   }
 
   export type TriggerNodesUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     TriggerNodeId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -9819,6 +9854,7 @@ export namespace Prisma {
 
   export type ActionNodesCreateInput = {
     id?: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
     workflow: WorkFlowCreateNestedOneWithoutActionsNodesInput
     type: AvailableActionNodesCreateNestedOneWithoutActionNodesInput
@@ -9828,11 +9864,13 @@ export namespace Prisma {
     id?: string
     workflowId: string
     ActionNodeId: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
   }
 
   export type ActionNodesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
     workflow?: WorkFlowUpdateOneRequiredWithoutActionsNodesNestedInput
     type?: AvailableActionNodesUpdateOneRequiredWithoutActionNodesNestedInput
@@ -9842,6 +9880,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     ActionNodeId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
@@ -9849,11 +9888,13 @@ export namespace Prisma {
     id?: string
     workflowId: string
     ActionNodeId: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
   }
 
   export type ActionNodesUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
@@ -9861,6 +9902,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     ActionNodeId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
@@ -10162,6 +10204,28 @@ export namespace Prisma {
     triggerId?: SortOrder
     userId?: SortOrder
   }
+  export type JsonFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type WorkFlowScalarRelationFilter = {
     is?: WorkFlowWhereInput
@@ -10176,6 +10240,7 @@ export namespace Prisma {
   export type TriggerNodesCountOrderByAggregateInput = {
     id?: SortOrder
     workflowId?: SortOrder
+    metadata?: SortOrder
     TriggerNodeId?: SortOrder
   }
 
@@ -10189,6 +10254,31 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     TriggerNodeId?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type TriggerNodesListRelationFilter = {
@@ -10236,6 +10326,7 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     ActionNodeId?: SortOrder
+    metadata?: SortOrder
     sortingOrder?: SortOrder
   }
 
@@ -10291,28 +10382,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
   }
-  export type JsonFilter<$PrismaModel = never> = 
-    | PatchUndefined<
-        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type WorkFlowOutBoxNullableScalarRelationFilter = {
     is?: WorkFlowOutBoxWhereInput | null
@@ -10333,31 +10402,6 @@ export namespace Prisma {
   export type WorkFlowRunMinOrderByAggregateInput = {
     id?: SortOrder
     workflowId?: SortOrder
-  }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> = 
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type WorkFlowRunScalarRelationFilter = {
@@ -10880,6 +10924,28 @@ export namespace Prisma {
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
+  export type NestedJsonFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
@@ -10906,28 +10972,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-  export type NestedJsonFilter<$PrismaModel = never> = 
-    | PatchUndefined<
-        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type WorkFlowCreateWithoutUserInput = {
@@ -11006,11 +11050,13 @@ export namespace Prisma {
 
   export type TriggerNodesCreateWithoutWorkflowInput = {
     id?: string
+    metadata?: JsonNullValueInput | InputJsonValue
     type: AvailableTriggerNodesCreateNestedOneWithoutTriggerNodeInput
   }
 
   export type TriggerNodesUncheckedCreateWithoutWorkflowInput = {
     id?: string
+    metadata?: JsonNullValueInput | InputJsonValue
     TriggerNodeId: string
   }
 
@@ -11021,6 +11067,7 @@ export namespace Prisma {
 
   export type ActionNodesCreateWithoutWorkflowInput = {
     id?: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
     type: AvailableActionNodesCreateNestedOneWithoutActionNodesInput
   }
@@ -11028,6 +11075,7 @@ export namespace Prisma {
   export type ActionNodesUncheckedCreateWithoutWorkflowInput = {
     id?: string
     ActionNodeId: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
   }
 
@@ -11105,11 +11153,13 @@ export namespace Prisma {
 
   export type TriggerNodesUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     type?: AvailableTriggerNodesUpdateOneRequiredWithoutTriggerNodeNestedInput
   }
 
   export type TriggerNodesUncheckedUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     TriggerNodeId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -11136,6 +11186,7 @@ export namespace Prisma {
     id?: StringFilter<"ActionNodes"> | string
     workflowId?: StringFilter<"ActionNodes"> | string
     ActionNodeId?: StringFilter<"ActionNodes"> | string
+    metadata?: JsonFilter<"ActionNodes">
     sortingOrder?: IntFilter<"ActionNodes"> | number
   }
 
@@ -11250,12 +11301,14 @@ export namespace Prisma {
 
   export type TriggerNodesCreateWithoutTypeInput = {
     id?: string
+    metadata?: JsonNullValueInput | InputJsonValue
     workflow: WorkFlowCreateNestedOneWithoutTriggerNodesInput
   }
 
   export type TriggerNodesUncheckedCreateWithoutTypeInput = {
     id?: string
     workflowId: string
+    metadata?: JsonNullValueInput | InputJsonValue
   }
 
   export type TriggerNodesCreateOrConnectWithoutTypeInput = {
@@ -11290,6 +11343,7 @@ export namespace Prisma {
     NOT?: TriggerNodesScalarWhereInput | TriggerNodesScalarWhereInput[]
     id?: StringFilter<"TriggerNodes"> | string
     workflowId?: StringFilter<"TriggerNodes"> | string
+    metadata?: JsonFilter<"TriggerNodes">
     TriggerNodeId?: StringFilter<"TriggerNodes"> | string
   }
 
@@ -11379,6 +11433,7 @@ export namespace Prisma {
 
   export type ActionNodesCreateWithoutTypeInput = {
     id?: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
     workflow: WorkFlowCreateNestedOneWithoutActionsNodesInput
   }
@@ -11386,6 +11441,7 @@ export namespace Prisma {
   export type ActionNodesUncheckedCreateWithoutTypeInput = {
     id?: string
     workflowId: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
   }
 
@@ -11564,6 +11620,7 @@ export namespace Prisma {
   export type ActionNodesCreateManyWorkflowInput = {
     id?: string
     ActionNodeId: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
   }
 
@@ -11574,6 +11631,7 @@ export namespace Prisma {
 
   export type ActionNodesUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
     type?: AvailableActionNodesUpdateOneRequiredWithoutActionNodesNestedInput
   }
@@ -11581,12 +11639,14 @@ export namespace Prisma {
   export type ActionNodesUncheckedUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     ActionNodeId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type ActionNodesUncheckedUpdateManyWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     ActionNodeId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
@@ -11610,31 +11670,37 @@ export namespace Prisma {
   export type TriggerNodesCreateManyTypeInput = {
     id?: string
     workflowId: string
+    metadata?: JsonNullValueInput | InputJsonValue
   }
 
   export type TriggerNodesUpdateWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     workflow?: WorkFlowUpdateOneRequiredWithoutTriggerNodesNestedInput
   }
 
   export type TriggerNodesUncheckedUpdateWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
   }
 
   export type TriggerNodesUncheckedUpdateManyWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
   }
 
   export type ActionNodesCreateManyTypeInput = {
     id?: string
     workflowId: string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: number
   }
 
   export type ActionNodesUpdateWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
     workflow?: WorkFlowUpdateOneRequiredWithoutActionsNodesNestedInput
   }
@@ -11642,12 +11708,14 @@ export namespace Prisma {
   export type ActionNodesUncheckedUpdateWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 
   export type ActionNodesUncheckedUpdateManyWithoutTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     sortingOrder?: IntFieldUpdateOperationsInput | number
   }
 

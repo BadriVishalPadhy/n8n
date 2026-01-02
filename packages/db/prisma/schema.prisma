@@ -39,7 +39,7 @@ model TriggerNodes {
   id                    String                @id @default(uuid())
   workflow              WorkFlow              @relation(fields: [workflowId], references: [id])
   workflowId            String                @unique
-
+  metadata    Json  @default("{}")
   TriggerNodeId         String
   type  AvailableTriggerNodes @relation(fields: [TriggerNodeId], references: [id])
   }
@@ -55,7 +55,8 @@ model ActionNodes {
   id                   String                @id @default(uuid())
   workflow             WorkFlow              @relation(fields: [workflowId], references: [id])
   workflowId           String
-  ActionNodeId         String
+  ActionNodeId          String
+  metadata    Json  @default("{}")
   sortingOrder         Int                   @default(0)
   type                 AvailableActionNodes @relation(fields: [ActionNodeId], references: [id])
 }
