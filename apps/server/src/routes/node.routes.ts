@@ -7,34 +7,41 @@ const nodeRouter: Router = Router();
 
 nodeRouter.post("/", authMiddleware, async (req, res) => {
   const parsedData = nodeCreateSchema.safeParse(req.body);
-  const id: string = req.id;
+  const id: string = req.user?.id;
 
   if (!parsedData.success) {
-    return res.status(401).json({ error: "Unauthorized entry" });
+    return res.status(400).json({
+      error: "Invalid request data",
+      details: parsedData.error,
+    });
   }
 
   try {
-    await prismaClient.$transaction(async (tx) => {
+    const workflowId = await prismaClient.$transaction(async (tx) => {
       const workflow = await tx.workFlow.create({
         data: {
-          userId: id, // Remove parseInt()
+          userId: id,
           triggerId: "",
           actionsNodes: {
-            create: parsedData.data.actions.map((n, index) => ({
-              ActionNodeId: n.availableActionId,
+            create: parsedData.data.actions.map((action, index) => ({
+              ActionNodeId: action.availableActionId,
               sortingOrder: index,
+              metadata: action.actionMeta,
             })),
           },
         },
       });
 
+      // Create trigger node
       const trigger = await tx.triggerNodes.create({
         data: {
           TriggerNodeId: parsedData.data.availableTriggerId,
           workflowId: workflow.id,
+          metadata: parsedData.data.triggerMeta,
         },
       });
 
+      // Update workflow with trigger ID
       await tx.workFlow.update({
         where: {
           id: workflow.id,
@@ -43,9 +50,14 @@ nodeRouter.post("/", authMiddleware, async (req, res) => {
           triggerId: trigger.id,
         },
       });
+
+      return workflow.id;
     });
 
-    return res.status(201).json({ message: "Workflow created successfully" });
+    return res.status(201).json({
+      message: "Workflow created successfully",
+      workflowId: workflowId,
+    });
   } catch (error) {
     console.error("Error creating workflow:", error);
     return res.status(500).json({ error: "Failed to create workflow" });
@@ -53,7 +65,7 @@ nodeRouter.post("/", authMiddleware, async (req, res) => {
 });
 
 nodeRouter.get("/", authMiddleware, async (req, res) => {
-  const id = req.id;
+  const id: string = req.user?.id;
   const workFlows = await prismaClient.workFlow.findMany({
     where: {
       userId: id,
@@ -78,7 +90,7 @@ nodeRouter.get("/", authMiddleware, async (req, res) => {
 });
 
 nodeRouter.get("/:workFlowId", authMiddleware, async (req, res) => {
-  const id = req.id;
+  const id: string = req.user?.id;
   const workFlowId = req.params.workFlowId;
   const workFlows = await prismaClient.workFlow.findMany({
     where: {

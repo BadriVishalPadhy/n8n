@@ -9,8 +9,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/v1", authRouter);
-app.use("/api/v1", nodeRouter);
+app.use("/api/v1/user", authRouter);
+app.use("/api/v1/workflow", nodeRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);

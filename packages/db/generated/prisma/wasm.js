@@ -135,6 +135,7 @@ exports.Prisma.WorkFlowScalarFieldEnum = {
 exports.Prisma.TriggerNodesScalarFieldEnum = {
   id: 'id',
   workflowId: 'workflowId',
+  metadata: 'metadata',
   TriggerNodeId: 'TriggerNodeId'
 };
 
@@ -147,6 +148,7 @@ exports.Prisma.ActionNodesScalarFieldEnum = {
   id: 'id',
   workflowId: 'workflowId',
   ActionNodeId: 'ActionNodeId',
+  metadata: 'metadata',
   sortingOrder: 'sortingOrder'
 };
 

@@ -1,7 +1,8 @@
+import { prismaClient } from "@repo/db";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-function authMiddleware(req: Request, res: Response, next: NextFunction) {
+async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
     const token = req.cookies.token;
 
@@ -13,7 +14,25 @@ function authMiddleware(req: Request, res: Response, next: NextFunction) {
       userId: string;
     };
 
-    req.user = { userId: decoded.userId };
+    const user = await prismaClient.user.findFirst({
+      where: {
+        id: decoded.userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        error: "user not found!",
+      });
+    }
+
+    req.user = user;
+
     next();
   } catch (error) {
     return res.status(401).json({
