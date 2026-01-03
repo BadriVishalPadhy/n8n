@@ -1,49 +1,44 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import axios from "axios";
+import { useState } from "react";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      const response = await fetch('http://your-backend-api/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await axios.post(
+        "http://localhost:3001/api/v1/user/signin",
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
 
-      const data = await response.json();
+      console.log("response", response);
+      console.log("Successs!!!!!", response.data);
+      window.location.href = "/dashboard"
 
-      if (response.ok) {
-        console.log('Login successful:', data);
-        // Store token and redirect
-        localStorage.setItem('token', data.token);
-        window.location.href = '/dashboard';
-      } else {
-        setError(data.message || 'Login failed');
-      }
-    } catch (err) {
-      setError('Network error. Please try again.');
+    } catch (error) {
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -64,7 +59,10 @@ export default function LoginPage() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email
               </label>
               <input
@@ -81,10 +79,16 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
-                <a href="#" className="text-sm text-gray-600 hover:text-gray-900">
+                <a
+                  href="#"
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -105,13 +109,16 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Logging in...' : 'Log In'}
+              {loading ? "Logging in..." : "Log In"}
             </button>
           </div>
 
           <div className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
-            <a href="/signup" className="text-gray-900 font-medium hover:underline">
+            Dont have an account?{" "}
+            <a
+              href="/signup"
+              className="text-gray-900 font-medium hover:underline"
+            >
               Sign up
             </a>
           </div>

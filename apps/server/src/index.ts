@@ -2,9 +2,14 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes";
 import nodeRouter from "./routes/node.routes";
-
-const PORT = 6000;
-const app = express();
+import cors from "cors"
+const PORT = 3001;
+const app = express()
+app.use(cors({
+  origin: 'http://localhost:3000', // your Next.js app URL
+  credentials: true
+}));
+;
 
 app.use(express.json());
 app.use(cookieParser());
