@@ -1,59 +1,74 @@
+"use client"
 
-
-import { useState } from 'react';
+import { useState } from "react";
+import axios from "axios";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  const [error, setError] = useState('');
+
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    setError('');
+const handleSubmit = async () => {
+  setError("");
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
+  if (formData.password !== formData.confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const response = await fetch('http://your-backend-api/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
-        })
-      });
+  try {
+    console.log("Sending request with data:", {
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+    });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log('Signup successful:', data);
-        window.location.href = '/dashboard';
-      } else {
-        setError(data.message || 'Signup failed');
+    const response = await axios.post(
+      "http://localhost:3001/api/v1/user/signup",
+      {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
       }
-    } catch (err) {
-      setError('Network error. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    );
 
-  const handleChange = (e:any) => {
+    console.log("Response:", response);
+    console.log("Signup successful:", response.data);
+    window.location.href = "/signin";
+
+  } catch (err: any) {
+    console.error("Full error:", err);
+    console.error("Error response:", err.response);
+    console.error("Error request:", err.request);
+    console.error("Error message:", err.message);
+
+    if (err.response) {
+      // Server responded with error
+      setError(err.response.data.message || `Error: ${err.response.status}`);
+    } else if (err.request) {
+      // Request made but no response
+      setError("Cannot connect to server. Is it running on port 5000?");
+    } else {
+      // Something else happened
+      setError(err.message || "An error occurred. Please try again.");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const handleChange = (e: any) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -74,14 +89,17 @@ export default function SignupPage() {
             )}
 
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Full Name
               </label>
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={formData.name}
+                id="username"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition"
@@ -90,7 +108,10 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email
               </label>
               <input
@@ -106,7 +127,10 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <input
@@ -123,7 +147,10 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Confirm Password
               </label>
               <input
@@ -144,25 +171,25 @@ export default function SignupPage() {
               disabled={loading}
               className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating account...' : 'Create Account'}
+              {loading ? "Creating account..." : "Create Account"}
             </button>
           </div>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Already have an account?{' '}
-            <a href="/login" className="text-gray-900 font-medium hover:underline">
-              Log in
-            </a>
-          </div>
+
         </div>
 
         <p className="text-center text-xs text-gray-500 mt-6">
-          By signing up, you agree to our{' '}
-          <a href="#" className="underline hover:text-gray-700">Terms</a>
-          {' '}and{' '}
-          <a href="#" className="underline hover:text-gray-700">Privacy Policy</a>
+          By signing up, you agree to our{" "}
+          <a href="#" className="underline hover:text-gray-700">
+            Terms
+          </a>{" "}
+          and{" "}
+          <a href="#" className="underline hover:text-gray-700">
+            Privacy Policy
+          </a>
         </p>
       </div>
-    </div>
-  );
-}
+      </div>
+
+  )};
+
