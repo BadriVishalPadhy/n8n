@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
@@ -23,7 +21,7 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-4">
-            <a href="/login" className="text-gray-600 hover:text-gray-900 transition">
+            <a href="/signin" className="text-gray-600 hover:text-gray-900 transition">
               Log in
             </a>
             <a
