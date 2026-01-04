@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Search,
   MousePointer2,
@@ -9,41 +10,32 @@ import {
   ArrowRight,
   X,
   Plus,
+  Divide,
 } from "lucide-react";
 
-export default function WorkFlow() {
+function WorkFlow() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedTrigger, setSelectedTrigger] = useState("");
+  const [selectedTrigger, setSelectedTrigger] = useState([]);
 
-  const triggers = [
-    {
-      id: "manual",
-      name: "Trigger manually",
-      description:
-        "Runs the flow on clicking a button in n8n. Good for getting started quickly",
-      icon: MousePointer2,
-      color: "text-gray-400",
-      hasArrow: false,
-    },
-    {
-      id: "app-event",
-      name: "On app event",
-      description:
-        "Runs the flow when something happens in an app like Telegram, Notion or Airtable",
-      icon: Zap,
-      color: "text-gray-400",
-      hasArrow: true,
-    },
+  const fetchTriggers = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3001/api/v1/availableTrigger",
+      );
 
-    {
-      id: "webhook",
-      name: "On webhook call",
-      description: "Runs the flow on receiving an HTTP request",
-      icon: Webhook,
-      color: "text-gray-400",
-      hasArrow: false,
-    },
-  ];
+      setSelectedTrigger(response.data.value);
+    } catch (error) {
+      console.error("Error fetching webhooks:", error);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await fetchTriggers();
+    })();
+  }, []);
+
+  const triggers = selectedTrigger;
 
   return (
     <div className="relative w-screen h-screen bg-zinc-950 overflow-hidden">
@@ -126,44 +118,13 @@ export default function WorkFlow() {
             </div>
 
             {/* Trigger list */}
-            <div className="space-y-1">
-              {triggers.map((trigger) => {
-                const Icon = trigger.icon;
-                const isSelected = selectedTrigger === trigger.name;
-
-                return (
-                  <button
-                    key={trigger.id}
-                    onClick={() => setSelectedTrigger(trigger.name)}
-                    className={`w-full text-left p-4 rounded-lg hover:bg-zinc-800 transition-colors group relative ${
-                      isSelected ? "bg-zinc-800" : ""
-                    }`}
-                  >
-                    {isSelected && (
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500 rounded-r" />
-                    )}
-
-                    <div className="flex items-start gap-4">
-                      <Icon
-                        className={`w-6 h-6 mt-1 flex-shrink-0 ${trigger.color}`}
-                      />
-
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-white font-medium mb-1">
-                          {trigger.name}
-                        </h3>
-                        <p className="text-gray-400 text-sm leading-relaxed">
-                          {trigger.description}
-                        </p>
-                      </div>
-
-                      {trigger.hasArrow && (
-                        <ArrowRight className="w-5 h-5 text-gray-600 flex-shrink-0 mt-1" />
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
+            <div>
+              {selectedTrigger.map((trigger) => (
+                <div
+                  key={trigger.id}
+                  className="bg-zinc-800 p-4 mb-2 rounded"
+                ></div>
+              ))}
             </div>
           </div>
         </div>
@@ -171,3 +132,5 @@ export default function WorkFlow() {
     </div>
   );
 }
+
+export default WorkFlow;
