@@ -1,135 +1,234 @@
-# Turborepo starter
+"use client";
 
-This Turborepo starter is maintained by the Turborepo core team.
+import { useState, useCallback, useEffect } from "react";
+import {
+  ReactFlow,
+  addEdge,
+  Background,
+  Controls,
+  useNodesState,
+  useEdgesState,
+  Handle,
+  Position,
+  type Node,
+  type Edge,
+  type Connection,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+import { Plus } from "lucide-react";
 
-## Using this example
+// Custom Webhook Node Component
+function WebhookNode({ data }: { data: any }) {
+  return (
+    <div className="relative">
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="w-3 h-3 bg-gray-500"
+      />
 
-Run the following command:
+      <div className="bg-zinc-800 border-2 border-zinc-600 rounded-2xl p-6 min-w-[180px]">
+        <div className="flex justify-center mb-3">
+          <div className="w-16 h-16 bg-zinc-700 rounded-xl flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
+        </div>
 
-```sh
-npx create-turbo@latest
-```
+        <div className="text-center">
+          <p className="text-white font-medium text-lg">{data.label}</p>
+          <p className="text-gray-400 text-xs mt-1">GET</p>
+        </div>
+      </div>
 
-## What's inside?
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="w-3 h-3 bg-gray-500"
+      />
+    </div>
+  );
+}
 
-This Turborepo includes the following packages/apps:
+// Custom Execute Button Node
+function ExecuteNode({ data }: { data: any }) {
+  return (
+    <div className="relative">
+      <button
+        onClick={data.onClick}
+        className="bg-gradient-to-r from-red-400 to-orange-400 text-white px-8 py-4 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+      >
+        <svg
+          className="w-6 h-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M9 2v6h6V2M19 2v6M5 2v6m14 4v10H5V12m9-7h5m-5 7h5" />
+        </svg>
+        Execute workflow
+      </button>
 
-### Apps and Packages
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="w-3 h-3 bg-gray-500"
+      />
+    </div>
+  );
+}
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+// Custom Add Node Button
+function AddNodeButton({ data }: { data: any }) {
+  return (
+    <div className="relative">
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="w-3 h-3 bg-gray-500"
+      />
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+      <button
+        onClick={data.onClick}
+        className="w-24 h-24 rounded-2xl border-2 border-dashed border-gray-500 bg-zinc-900 flex items-center justify-center hover:border-gray-400 hover:bg-zinc-800 transition-all group"
+      >
+        <Plus
+          className="w-10 h-10 text-gray-500 group-hover:text-gray-400"
+          strokeWidth={2}
+        />
+      </button>
+    </div>
+  );
+}
 
-### Utilities
+// Register custom node types
+const nodeTypes = {
+  webhook: WebhookNode,
+  execute: ExecuteNode,
+  addButton: AddNodeButton,
+};
 
-This Turborepo has some additional tools already setup for you:
+const initialNodes: Node[] = [];
+const initialEdges: Edge[] = [];
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+export default function WorkflowBuilder() {
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialEdges);
+  const [nodeId, setNodeId] = useState(0);
 
-### Build
+  // Add initial "Execute workflow" button on mount
+  useEffect(() => {
+    setNodes([
+      {
+        id: "execute-1",
+        type: "execute",
+        position: { x: 50, y: 250 },
+        data: { label: "Execute workflow", onClick: addWebhookNode },
+      },
+    ]);
+  }, []);
 
-To build all apps and packages, run the following command:
+  const onConnect = useCallback(
+    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+  );
 
-```
-cd my-turborepo
+  // Add webhook node when Execute button is clicked
+  function addWebhookNode() {
+    const newId = `webhook-${nodeId}`;
+    const newNode: Node = {
+      id: newId,
+      type: "webhook",
+      position: { x: 400, y: 200 },
+      data: { label: "Webhook" },
+    };
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+    const addButtonNode: Node = {
+      id: `add-${nodeId}`,
+      type: "addButton",
+      position: { x: 700, y: 225 },
+      data: { onClick: () => addAnotherNode(newId) },
+    };
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+    setNodes((nds) => [...nds, newNode, addButtonNode]);
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+    // Connect Execute button to Webhook
+    setEdges((eds) => [
+      ...eds,
+      {
+        id: `e-execute-${newId}`,
+        source: "execute-1",
+        target: newId,
+        animated: true,
+        style: { stroke: "#6366f1" },
+      },
+      {
+        id: `e-${newId}-add`,
+        source: newId,
+        target: `add-${nodeId}`,
+        animated: true,
+        style: { stroke: "#6366f1" },
+      },
+    ]);
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+    setNodeId(nodeId + 1);
+  }
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+  // Add another node after webhook
+  function addAnotherNode(sourceId: string) {
+    const newId = `node-${nodeId}`;
+    const newNode: Node = {
+      id: newId,
+      type: "webhook",
+      position: { x: 700 + nodeId * 250, y: 200 },
+      data: { label: `Node ${nodeId}` },
+    };
 
-### Develop
+    setNodes((nds) => [...nds, newNode]);
 
-To develop all apps and packages, run the following command:
+    setEdges((eds) => [
+      ...eds,
+      {
+        id: `e-${sourceId}-${newId}`,
+        source: sourceId,
+        target: newId,
+        animated: true,
+        style: { stroke: "#6366f1" },
+      },
+    ]);
 
-```
-cd my-turborepo
+    setNodeId(nodeId + 1);
+  }
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+  return (
+    <div className="w-full h-screen bg-zinc-950">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+        fitView
+        className="bg-zinc-950"
+      >
+        <Background
+          color="#4C4C4C"
+          gap={24}
+          size={1}
+          style={{ backgroundColor: "#171717" }}
+        />
+        <Controls className="bg-zinc-800 border border-zinc-700" />
+      </ReactFlow>
+    </div>
+  );
+}
