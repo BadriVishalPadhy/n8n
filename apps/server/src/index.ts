@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use("/api/v1/user", authRouter);
 app.use("/api/v1/workflow", nodeRouter);
 app.use("/api/v1/availableTrigger", triggerRouter);
-app.use("/api/v1/availableAction", actionRouter);
+app.use("/api/v1/availableActions", actionRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);

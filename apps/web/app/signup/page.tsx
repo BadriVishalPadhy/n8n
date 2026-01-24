@@ -32,7 +32,7 @@ const handleSubmit = async () => {
     });
 
     const response = await axios.post(
-      "http://localhost:3001/api/v1/user/signup",
+      "/api/v1/user/signup",
       {
         username: formData.username,
         email: formData.email,
@@ -52,7 +52,14 @@ const handleSubmit = async () => {
 
     if (err.response) {
       // Server responded with error
-      setError(err.response.data.message || `Error: ${err.response.status}`);
+      const data = err.response.data;
+      if (data.details) {
+        // Zod validation errors
+        const messages = data.details.map((d: any) => `${d.path.join(".")}: ${d.message}`).join(", ");
+        setError(messages);
+      } else {
+        setError(data.error || data.message || `Error: ${err.response.status}`);
+      }
     } else if (err.request) {
       // Request made but no response
       setError("Cannot connect to server. Is it running on port 5000?");
