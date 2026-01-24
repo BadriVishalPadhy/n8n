@@ -16,7 +16,11 @@ authRouter.post("/signup", async (req, res) => {
   const parsedBody = signupSchema.safeParse(req.body);
 
   if (!parsedBody.success) {
-    res.status(400).json({ error: "Wrong Credentials" });
+    console.log("Signup validation error:", parsedBody.error);
+    res.status(400).json({
+      error: "Validation failed",
+      details: parsedBody.error
+    });
     return;
   }
   const password = parsedBody.data?.password;
@@ -37,32 +41,43 @@ authRouter.post("/signup", async (req, res) => {
 authRouter.post("/signin", async (req, res) => {
   const parsedBody = signinSchema.safeParse(req.body);
 
+  if (!parsedBody.success) {
+    return res.status(400).json({ error: "Invalid credentials format" });
+  }
+
   const user = await prismaClient.user.findUnique({
     where: {
-      email: parsedBody.data!.email,
+      email: parsedBody.data.email,
     },
   });
-  const password = parsedBody.data?.password;
-  const passwordValid = bcrypt.compare(password!, user?.password!);
 
-  const token = jwt.sign({ userId: user?.id }, process.env.JWT_SECRET!, {
+  if (!user) {
+    return res.status(401).json({ error: "User does not exist" });
+  }
+
+  const password = parsedBody.data.password;
+  const passwordValid = await bcrypt.compare(password, user.password);
+
+  if (!passwordValid) {
+    return res.status(401).json({ error: "Invalid password" });
+  }
+
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
     expiresIn: "24h",
   });
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: false,
+    sameSite: "strict", // Changed to strict - works for same-site requests
     maxAge: 24 * 60 * 60 * 1000,
+    path: "/",
+    domain: "localhost", // Explicitly set domain for localhost
   });
 
-  res.json({
+  return res.json({
     success: true,
   });
-
-  if (!user || !passwordValid) {
-    res.status(401).json({ error: "user does not exist" });
-  }
 });
 
 export default authRouter;

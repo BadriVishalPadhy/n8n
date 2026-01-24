@@ -6,6 +6,9 @@ import { nodeCreateSchema } from "../types/type";
 const nodeRouter: Router = Router();
 
 nodeRouter.post("/", authMiddleware, async (req, res) => {
+  console.log("Create workflow request received", req.body);
+  console.log("User from auth middleware:", req.user);
+
   const parsedData = nodeCreateSchema.safeParse(req.body);
   const id: string = req.user?.id;
 
