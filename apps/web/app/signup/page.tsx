@@ -32,41 +32,29 @@ const handleSubmit = async () => {
     });
 
     const response = await axios.post(
-      "/api/v1/user/signup",
+      "http://localhost:3001/api/v1/user/signup",
       {
         username: formData.username,
         email: formData.email,
         password: formData.password,
       }
-    );
-
-    console.log("Response:", response);
-    console.log("Signup successful:", response.data);
-    window.location.href = "/signin";
+    )
+    .then( (response) => {
+      alert("Signup successful")
+      window.location.href = "/signin"
+    }  )
+    .catch( (error) => {
+      console.error("Signup failed:", error);
+      setError("Signup failed");
+    } )
 
   } catch (err: any) {
     console.error("Full error:", err);
-    console.error("Error response:", err.response);
+    // console.error("Error response:", err.response);
     console.error("Error request:", err.request);
     console.error("Error message:", err.message);
 
-    if (err.response) {
-      // Server responded with error
-      const data = err.response.data;
-      if (data.details) {
-        // Zod validation errors
-        const messages = data.details.map((d: any) => `${d.path.join(".")}: ${d.message}`).join(", ");
-        setError(messages);
-      } else {
-        setError(data.error || data.message || `Error: ${err.response.status}`);
-      }
-    } else if (err.request) {
-      // Request made but no response
-      setError("Cannot connect to server. Is it running on port 5000?");
-    } else {
-      // Something else happened
-      setError(err.message || "An error occurred. Please try again.");
-    }
+
   } finally {
     setLoading(false);
   }
@@ -185,7 +173,7 @@ const handleSubmit = async () => {
 
         </div>
 
-        <p className="text-center text-xs text-gray-500 mt-6">
+        {/* <p className="text-center text-xs text-gray-500 mt-6">
           By signing up, you agree to our{" "}
           <a href="#" className="underline hover:text-gray-700">
             Terms
@@ -194,7 +182,7 @@ const handleSubmit = async () => {
           <a href="#" className="underline hover:text-gray-700">
             Privacy Policy
           </a>
-        </p>
+        </p> */}
       </div>
       </div>
 
