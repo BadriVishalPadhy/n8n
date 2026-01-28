@@ -17,7 +17,7 @@ async function main() {
       where: {},
       take: 10,
     });
-    console.log(pendingRows);
+    console.log("pendingRows", pendingRows);
 
     await producer.send({
       topic: TOPIC_NAME,

@@ -17,8 +17,10 @@
     "@types/jsonwebtoken": "^9.0.10"
   },
   "dependencies": {
+    "@types/cookie": "^1.0.0",
     "@types/express": "^5.0.6",
     "bcrypt": "^6.0.0",
+    "cookie": "^1.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

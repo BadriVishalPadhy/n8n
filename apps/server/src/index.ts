@@ -5,9 +5,14 @@ import nodeRouter from "./routes/node.routes";
 import triggerRouter from "./routes/trigger.routes";
 import actionRouter from "./routes/action.routes";
 import cors from "cors";
-const PORT = 3001;
+const PORT = 8000;
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 app.use(cookieParser());

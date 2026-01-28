@@ -17,17 +17,19 @@ export default function LoginPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/v1/user/signin",
+        "http://localhost:8000/api/v1/user/signin",
         {
           email: formData.email,
           password: formData.password,
-        }
+        },
+        {
+          withCredentials: true,
+        },
       );
 
-      console.log("response", response);
+      alert(response);
       console.log("Successs!!!!!", response.data);
-      window.location.href = "/dashboard"
-
+      window.location.href = "/dashboard";
     } catch (error) {
       setError("Network error. Please try again.");
     } finally {
