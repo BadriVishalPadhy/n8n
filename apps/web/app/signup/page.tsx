@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import axios from "axios";
@@ -14,51 +14,52 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-const handleSubmit = async () => {
-  setError("");
+  const handleSubmit = async () => {
+    setError("");
 
-  if (formData.password !== formData.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    console.log("Sending request with data:", {
-      username: formData.username,
-      email: formData.email,
-      password: formData.password,
-    });
-
-    const response = await axios.post(
-      "http://localhost:3001/api/v1/user/signup",
-      {
+    try {
+      console.log("Sending request with data:", {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-      }
-    )
-    .then( (response) => {
-      alert("Signup successful")
-      window.location.href = "/signin"
-    }  )
-    .catch( (error) => {
-      console.error("Signup failed:", error);
-      setError("Signup failed");
-    } )
+      });
 
-  } catch (err: any) {
-    console.error("Full error:", err);
-    // console.error("Error response:", err.response);
-    console.error("Error request:", err.request);
-    console.error("Error message:", err.message);
-
-
-  } finally {
-    setLoading(false);
-  }
-};
+      const response = await axios
+        .post(
+          "http://localhost:8000/api/v1/user/signup",
+          {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+          },
+          {
+            withCredentials: true,
+          },
+        )
+        .then((response) => {
+          alert(response);
+          window.location.href = "/dashboard";
+        })
+        .catch((error) => {
+          console.error("Signup failed:", error);
+          setError("Signup failed");
+        });
+    } catch (err: any) {
+      console.error("Full error:", err);
+      // console.error("Error response:", err.response);
+      console.error("Error request:", err.request);
+      console.error("Error message:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e: any) => {
     setFormData({
@@ -169,8 +170,6 @@ const handleSubmit = async () => {
               {loading ? "Creating account..." : "Create Account"}
             </button>
           </div>
-
-
         </div>
 
         {/* <p className="text-center text-xs text-gray-500 mt-6">
@@ -184,7 +183,6 @@ const handleSubmit = async () => {
           </a>
         </p> */}
       </div>
-      </div>
-
-  )};
-
+    </div>
+  );
+}

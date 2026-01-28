@@ -1,4 +1,7 @@
+//one WorkFlow will have many WorkFlowRuns
+
 import { Kafka } from "kafkajs";
+import { prismaClient } from "@repo/db";
 
 const kafka = new Kafka({
   clientId: "my-app",
@@ -17,20 +20,32 @@ async function main() {
 
   await consumer.run({
     autoCommit: false,
+
     eachMessage: async ({ topic, partition, message }) => {
-      console.log({
-        partition,
-        offset: message.offset,
-        value: message?.value?.toString(),
-      });
       await new Promise((Resolve) => setTimeout(Resolve, 2000));
-      await consumer.commitOffsets([
-        {
-          topic: TOPIC_NAME,
-          partition: partition,
-          offset: (parseInt(message.offset) + 1).toString(),
+
+      const obj = JSON.parse(message.value?.toString()!);
+      const workflowId = obj.WorkFlowRunId;
+
+      const avaialbleActions = await prismaClient.workFlowRun.findFirst({
+        where: {
+          workflowId,
         },
-      ]);
+        include: {
+          workflow: {
+            include: {
+              actionsNodes: {
+                include: {
+                  type: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const currentAction = avaialbleActions?.workflow.actionsNodes;
+      console.log("currentAction", currentAction);
     },
   });
 }
