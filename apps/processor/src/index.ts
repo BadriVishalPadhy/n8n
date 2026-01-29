@@ -23,7 +23,7 @@ async function main() {
       topic: TOPIC_NAME,
       messages: pendingRows.map((r) => {
         return {
-          value: JSON.stringify({ WorkFlowRunId: r.WorkFlowRunId }),
+          value: JSON.stringify({ WorkFlowRunId: r.WorkFlowRunId, stage: 0 }),
         };
       }),
     });
