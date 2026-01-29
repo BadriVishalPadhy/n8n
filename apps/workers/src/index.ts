@@ -20,16 +20,16 @@ async function main() {
 
   await consumer.run({
     autoCommit: false,
-
     eachMessage: async ({ topic, partition, message }) => {
       await new Promise((Resolve) => setTimeout(Resolve, 2000));
 
       const obj = JSON.parse(message.value?.toString()!);
+      const stage = obj.stage;
       const workflowId = obj.WorkFlowRunId;
 
       const avaialbleActions = await prismaClient.workFlowRun.findFirst({
         where: {
-          workflowId,
+          id: workflowId, //i missed id
         },
         include: {
           workflow: {
@@ -44,8 +44,26 @@ async function main() {
         },
       });
 
-      const currentAction = avaialbleActions?.workflow.actionsNodes;
-      console.log("currentAction", currentAction);
+      const currentAction = avaialbleActions?.workflow.actionsNodes.find(
+        (x) => x.sortingOrder === stage,
+      );
+
+      if (currentAction?.type.id == "email") {
+        console.log("email");
+      }
+      if (currentAction?.type.id == "sol") {
+        console.log("sol");
+      }
+
+      await new Promise((res) => setTimeout(res, 1000));
+
+      await consumer.commitOffsets([
+        {
+          topic: TOPIC_NAME,
+          partition: partition,
+          offset: (parseInt(message.offset) + 1).toString(),
+        },
+      ]);
     },
   });
 }
