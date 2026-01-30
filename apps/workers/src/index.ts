@@ -7,6 +7,7 @@ const kafka = new Kafka({
   clientId: "my-app",
   brokers: ["localhost:9092"],
 });
+
 const TOPIC_NAME = "OUTBOX";
 
 const consumer = kafka.consumer({ groupId: "worker" });
@@ -24,7 +25,7 @@ async function main() {
       await new Promise((Resolve) => setTimeout(Resolve, 2000));
 
       const obj = JSON.parse(message.value?.toString()!);
-      const stage = obj.stage;
+
       const workflowId = obj.WorkFlowRunId;
 
       const avaialbleActions = await prismaClient.workFlowRun.findFirst({
@@ -44,13 +45,18 @@ async function main() {
         },
       });
 
+      const stage = 2;
+
       const currentAction = avaialbleActions?.workflow.actionsNodes.find(
         (x) => x.sortingOrder === stage,
       );
 
+      console.log("stage", stage);
+
       if (currentAction?.type.id == "email") {
         console.log("email");
       }
+
       if (currentAction?.type.id == "sol") {
         console.log("sol");
       }
