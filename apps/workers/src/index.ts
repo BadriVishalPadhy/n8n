@@ -45,12 +45,12 @@ async function main() {
         },
       });
 
-      const stage = 2;
+      const stage = obj.stage;
 
       const currentAction = avaialbleActions?.workflow.actionsNodes.find(
         (x) => x.sortingOrder === stage,
       );
-
+      const length: number = currentAction?.type.name.length!;
       console.log("stage", stage);
 
       if (currentAction?.type.id == "email") {
@@ -70,6 +70,23 @@ async function main() {
           offset: (parseInt(message.offset) + 1).toString(),
         },
       ]);
+
+      const producer = kafka.producer();
+      await producer.connect();
+
+      if (length >= stage) {
+        await producer.send({
+          topic: TOPIC_NAME,
+          messages: [
+            {
+              value: JSON.stringify({
+                WorkFlowRunId: workflowId,
+                stage: stage + 1,
+              }),
+            },
+          ],
+        });
+      }
     },
   });
 }
