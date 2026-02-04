@@ -1,11 +1,15 @@
 //one WorkFlow will have many WorkFlowRuns
 import { Kafka } from "kafkajs";
 import { prismaClient } from "@repo/db";
+import { JsonObject } from "../../../packages/db/generated/prisma/runtime/library";
+import json_templates from "json-templates";
 
 const kafka = new Kafka({
   clientId: "my-app",
   brokers: ["localhost:9092"],
 });
+
+const parse = json_templates;
 
 const TOPIC_NAME = "OUTBOX";
 const consumer = kafka.consumer({ groupId: "worker" });
@@ -80,12 +84,18 @@ async function main() {
         return;
       }
 
+      const workData: any = availableActions.meta;
+
       // Execute action based on type
       console.log(`Executing stage ${stage}: ${currentAction.type.name}`);
 
       if (currentAction.type.id === "email") {
-        console.log("Sending email...");
-        // Email logic here
+        const body = parse(
+          (currentAction.metadata as JsonObject)?.body as string,
+        );
+        const to = parse((currentAction.metadata as JsonObject).to as string);
+        console.log(` sending this ${body.parameters} to ${to.parameters} `);
+        console.log("Email body ===", currentAction.metadata);
       }
 
       if (currentAction.type.id === "sol") {
@@ -97,7 +107,7 @@ async function main() {
       const hasNextAction =
         stage + 1 < availableActions.workflow.actionsNodes.length;
       const length = availableActions.workflow.actionsNodes.length;
-      console.log("length", length);
+
       if (hasNextAction) {
         console.log(`Publishing next stage: ${stage + 1}`);
         await producer.send({
