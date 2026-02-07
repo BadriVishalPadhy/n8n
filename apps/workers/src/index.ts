@@ -103,7 +103,6 @@ async function main() {
 
         console.log(`Executing stage ${stage}: ${currentAction.type.name}`);
 
-        // ✅ EMAIL ACTION
         if (currentAction.type.id === "email") {
           console.log("Sending email...");
 
@@ -112,13 +111,21 @@ async function main() {
           console.log("Original metadata:", metadata);
           console.log("WORKDATA:", workData);
 
-          // ✅ Parse ALL fields dynamically
+          // const parsedMetadata: any = {};
+          // for (const key in metadata) {
+          //   if (typeof metadata[key] === "string") {
+          //     parsedMetadata[key] = parse(metadata[key], workData);
+          //   } else {
+          //     parsedMetadata[key] = metadata[key];
+          //   }
+          // }
+
           const parsedMetadata: any = {};
-          for (const key in metadata) {
-            if (typeof metadata[key] === "string") {
-              parsedMetadata[key] = parse(metadata[key], workData);
+          for (const key in workData) {
+            if (typeof workData[key] === "string") {
+              parsedMetadata[key] = parse(workData[key], workData);
             } else {
-              parsedMetadata[key] = metadata[key];
+              parsedMetadata[key] = workData[key];
             }
           }
 
@@ -128,7 +135,6 @@ async function main() {
           // await EmailService.sendEmail(parsedMetadata);
         }
 
-        // ✅ WEBHOOK ACTION
         if (currentAction.type.id === "webhook") {
           console.log("Calling webhook...");
 
