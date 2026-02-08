@@ -180,6 +180,9 @@ importers:
 
   apps/workers:
     dependencies:
+      '@types':
+        specifier: link:nodemailer/@types
+        version: link:nodemailer/@types
       '@types/express':
         specifier: ^5.0.6
         version: 5.0.6

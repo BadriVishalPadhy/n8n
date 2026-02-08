@@ -2,6 +2,7 @@
 import { Kafka } from "kafkajs";
 import { prismaClient } from "@repo/db";
 import { parse } from "./parse";
+// import { sendEmail } from "../src/email"; // You'll need to create this
 
 const kafka = new Kafka({
   clientId: "my-app",
@@ -85,10 +86,12 @@ async function main() {
           return;
         }
 
-        const currentAction = availableActions.workflow.actionsNodes[stage];
+        const currentAction = availableActions.workflow.actionsNodes.find(
+          (x) => x.sortingOrder === stage,
+        );
 
         if (!currentAction) {
-          console.log(`Workflow ${workflowRunId} completed - no more actions`);
+          console.log("Current action not found?");
           await consumer.commitOffsets([
             {
               topic: TOPIC_NAME,
@@ -99,87 +102,42 @@ async function main() {
           return;
         }
 
-        const workData: any = availableActions.meta || {};
+        // This is the runtime data from the trigger event (zapRunMetadata equivalent)
+        const workflowRunMetadata = availableActions.meta || {};
 
         console.log(`Executing stage ${stage}: ${currentAction.type.name}`);
 
+        //Email---------------------------------------------------------------------------------------
         if (currentAction.type.id === "email") {
-          console.log("Sending email...");
-
           const metadata = currentAction.metadata as any;
 
-          console.log("Original metadata:", metadata);
-          console.log("WORKDATA:", workData);
+          console.log("workflowRunMetadata", workflowRunMetadata);
 
-          // const parsedMetadata: any = {};
-          // for (const key in metadata) {
-          //   if (typeof metadata[key] === "string") {
-          //     parsedMetadata[key] = parse(metadata[key], workData);
-          //   } else {
-          //     parsedMetadata[key] = metadata[key];
-          //   }
-          // }
+          // Parse the email template with runtime data
+          // const body = parse(metadata?.body as string, workflowRunMetadata);
+          // const to = parse(metadata?.email as string, workflowRunMetadata);
+          // const subject = parse(
+          //   metadata?.subject as string,
+          //   workflowRunMetadata,
+          // );
 
-          const parsedMetadata: any = {};
-          for (const key in workData) {
-            if (typeof workData[key] === "string") {
-              parsedMetadata[key] = parse(workData[key], workData);
-            } else {
-              parsedMetadata[key] = workData[key];
-            }
-          }
+          // console.log(`Sending email to ${to}`);
+          // console.log(`Subject: ${subject}`);
+          // console.log(`Body: ${body}`);
 
-          console.log("Parsed metadata:", parsedMetadata);
-
-          // TODO: Send email
-          // await EmailService.sendEmail(parsedMetadata);
+          // await sendEmail(to, subject, body);
+          console.log("Email sent successfully!");
         }
 
-        if (currentAction.type.id === "webhook") {
-          console.log("Calling webhook...");
+        await new Promise((r) => setTimeout(r, 500));
 
-          const metadata = currentAction.metadata as any;
+        const lastStage =
+          (availableActions.workflow.actionsNodes?.length || 1) - 1;
+        console.log("Last stage:", lastStage);
+        console.log("Current stage:", stage);
 
-          console.log("Original metadata:", metadata);
-          console.log("WORKDATA:", workData);
-
-          // ✅ Parse ALL fields dynamically
-          const parsedMetadata: any = {};
-          for (const key in metadata) {
-            if (typeof metadata[key] === "string") {
-              parsedMetadata[key] = parse(metadata[key], workData);
-            } else if (
-              typeof metadata[key] === "object" &&
-              metadata[key] !== null
-            ) {
-              // Handle nested objects (like body)
-              parsedMetadata[key] = {};
-              for (const nestedKey in metadata[key]) {
-                if (typeof metadata[key][nestedKey] === "string") {
-                  parsedMetadata[key][nestedKey] = parse(
-                    metadata[key][nestedKey],
-                    workData,
-                  );
-                } else {
-                  parsedMetadata[key][nestedKey] = metadata[key][nestedKey];
-                }
-              }
-            } else {
-              parsedMetadata[key] = metadata[key];
-            }
-          }
-
-          console.log("Parsed metadata:", parsedMetadata);
-
-          // TODO: Call webhook
-          // await WebhookService.callWebhook(parsedMetadata);
-        }
-
-        const hasNextAction =
-          stage + 1 < availableActions.workflow.actionsNodes.length;
-
-        if (hasNextAction) {
-          console.log(`Publishing next stage: ${stage + 1}`);
+        if (lastStage !== stage) {
+          console.log("Pushing back to the queue");
           await producer.send({
             topic: TOPIC_NAME,
             messages: [
@@ -191,9 +149,9 @@ async function main() {
               },
             ],
           });
-        } else {
-          console.log(`Stage ${stage} was the last action`);
         }
+
+        console.log("Processing done");
 
         await consumer.commitOffsets([
           {
