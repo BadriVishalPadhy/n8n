@@ -1,67 +1,43 @@
-/**
- * Parse template strings using workflow execution data
- * Supports: {step0.result}, {workflowRunId}, {stage}, etc.
- */
 export function parse(
-  template: string,
-  data: Record<string, any>,
-  startDelim = "{",
-  endDelim = "}",
-): string {
+  text: string,
+  values: any,
+  startDelimeter = "{",
+  endDelimeter = "}",
+) {
+  // You received {comment.amount} momey from {comment.link}
   let startIndex = 0;
+  let endIndex = 1;
+
   let finalString = "";
-
-  while (startIndex < template.length) {
-    if (template[startIndex] === startDelim) {
-      let endIndex = startIndex + 1;
-
-      while (endIndex < template.length && template[endIndex] !== endDelim) {
-        endIndex++;
+  while (endIndex < text.length) {
+    if (text[startIndex] === startDelimeter) {
+      let endPoint = startIndex + 2;
+      while (text[endPoint] !== endDelimeter) {
+        endPoint++;
       }
-
-      if (endIndex < template.length) {
-        const keyPath = template.slice(startIndex + 1, endIndex);
-        const value = getNestedValue(data, keyPath);
-
-        finalString += value !== undefined ? String(value) : "";
-        startIndex = endIndex + 1;
-      } else {
-        finalString += template[startIndex];
-        startIndex++;
+      //
+      let stringHoldingValue = text.slice(startIndex + 1, endPoint);
+      const keys = stringHoldingValue.split(".");
+      let localValues = {
+        ...values,
+      };
+      for (let i = 0; i < keys.length; i++) {
+        if (typeof localValues === "string") {
+          localValues = JSON.parse(localValues);
+        }
+        localValues = localValues[keys[i]!];
       }
+      finalString += localValues;
+      startIndex = endPoint + 1;
+      endIndex = endPoint + 2;
     } else {
-      finalString += template[startIndex];
+      finalString += text[startIndex];
       startIndex++;
+      endIndex++;
     }
   }
-
+  if (text[startIndex]) {
+    finalString += text[startIndex];
+  }
   return finalString;
-}
-
-/**
- * Navigate through nested object using dot notation
- */
-function getNestedValue(obj: any, path: string): any {
-  const keys = path.split(".");
-  let current = obj;
-
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-
-    if (current === null || current === undefined) {
-      return undefined;
-    }
-
-    if (typeof current === "string") {
-      try {
-        current = JSON.parse(current);
-      } catch (e) {
-        return undefined;
-      }
-    }
-
-    current = current[key!];
-  }
-
-  return current;
 }
