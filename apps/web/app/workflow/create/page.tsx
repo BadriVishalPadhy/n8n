@@ -189,7 +189,58 @@ export default function WorkflowBuilder() {
     }
   }
 
+  function addTriggerDirectly(item: AvailableNode) {
+    const nodeId = `node-${Date.now()}`;
+    const isFirstNode = nodes.length === 0;
+    const lastNode = nodes.length > 0 ? nodes[nodes.length - 1] : null;
+
+    const newNode: any = {
+      id: nodeId,
+      type: "custom",
+      position: {
+        x: isFirstNode ? 300 : (lastNode?.position.x ?? 300) + 350,
+        y: isFirstNode ? 100 : (lastNode?.position.y ?? 100),
+      },
+      data: {
+        label: item.name,
+        subtitle: "trigger",
+        type: "trigger",
+        availableActionId: item.id,
+        metadata: {},
+        onDelete: () => deleteNode(nodeId),
+      },
+    };
+
+    setNodes((nds: any) => [...nds, newNode]);
+
+    if (lastNode) {
+      const newEdge: Edge = {
+        id: `edge-${lastNode.id}-${nodeId}`,
+        source: lastNode.id,
+        target: nodeId,
+        animated: true,
+        type: "smoothstep",
+        style: {
+          stroke: "#6b7280",
+          strokeWidth: 2,
+          strokeDasharray: "5, 5",
+        },
+      };
+      setEdges((eds) => [...eds, newEdge]);
+    }
+
+    setSidebarOpen(false);
+    setSidebarType("action");
+  }
+
   function openModal(item: AvailableNode) {
+    // Triggers don't need a modal — add directly
+    if (sidebarType === "trigger") {
+      addTriggerDirectly(item);
+      return;
+    }
+
+    // Actions open the modal for configuration
     setSelectedItem(item);
     setMetadata({});
     setSidebarOpen(false);
@@ -447,7 +498,11 @@ export default function WorkflowBuilder() {
                   </div>
                   <div className="text-left">
                     <p className="text-white font-medium">{item.name}</p>
-                    <p className="text-gray-400 text-sm">Configure and add</p>
+                    <p className="text-gray-400 text-sm">
+                      {sidebarType === "trigger"
+                        ? "Click to add"
+                        : "Configure and add"}
+                    </p>
                   </div>
                 </button>
               );
@@ -463,7 +518,7 @@ export default function WorkflowBuilder() {
         />
       )}
 
-      {/* Modal */}
+      {/* Modal — only shown for actions, never for triggers */}
       {modalOpen && selectedItem && (
         <div className="fixed inset-0 flex items-center justify-center z-[60]">
           <div
@@ -490,9 +545,7 @@ export default function WorkflowBuilder() {
                   <h2 className="text-xl font-semibold text-white">
                     {selectedItem.name}
                   </h2>
-                  <p className="text-gray-400 text-sm">
-                    Configure {sidebarType}
-                  </p>
+                  <p className="text-gray-400 text-sm">Configure action</p>
                 </div>
               </div>
               <button
@@ -507,6 +560,7 @@ export default function WorkflowBuilder() {
               </button>
             </div>
             <div className="p-6 space-y-4 overflow-y-auto max-h-[400px]">
+              {/* Common name field */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Name
@@ -521,6 +575,56 @@ export default function WorkflowBuilder() {
                   className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 />
               </div>
+
+              {/* Email-specific fields */}
+              {selectedItem.id === "email" && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      To (Email)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. {email} or user@example.com"
+                      value={metadata.email || ""}
+                      onChange={(e) =>
+                        setMetadata({ ...metadata, email: e.target.value })
+                      }
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Subject
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Payment received for {userName}"
+                      value={metadata.subject || ""}
+                      onChange={(e) =>
+                        setMetadata({ ...metadata, subject: e.target.value })
+                      }
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Body
+                    </label>
+                    <textarea
+                      placeholder="e.g. Hello {userName}, your payment of {amount} was received!"
+                      value={metadata.body || ""}
+                      onChange={(e) =>
+                        setMetadata({ ...metadata, body: e.target.value })
+                      }
+                      rows={4}
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 resize-none"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Webhook-specific fields */}
               {selectedItem.id === "webhook" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -537,6 +641,8 @@ export default function WorkflowBuilder() {
                   />
                 </div>
               )}
+
+              {/* Description — optional for all actions */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Description (Optional)
