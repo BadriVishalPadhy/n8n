@@ -4,7 +4,9 @@ export function parse(
   startDelimeter = "{",
   endDelimeter = "}",
 ) {
-  // You received {comment.amount} momey from {comment.link}
+  // Guard against undefined/null text
+  if (!text) return "";
+
   let startIndex = 0;
   let endIndex = 1;
 
@@ -15,7 +17,6 @@ export function parse(
       while (text[endPoint] !== endDelimeter) {
         endPoint++;
       }
-      //
       let stringHoldingValue = text.slice(startIndex + 1, endPoint);
       const keys = stringHoldingValue.split(".");
       let localValues = {

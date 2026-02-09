@@ -2,7 +2,7 @@
 import { Kafka } from "kafkajs";
 import { prismaClient } from "@repo/db";
 import { parse } from "./parse";
-// import { sendEmail } from "../src/email"; // You'll need to create this
+import { sendEmail } from "./email"; // You'll need to create this
 
 const kafka = new Kafka({
   clientId: "my-app",
@@ -113,20 +113,18 @@ async function main() {
 
           console.log("workflowRunMetadata", workflowRunMetadata);
 
-          // Parse the email template with runtime data
-          // const body = parse(metadata?.body as string, workflowRunMetadata);
-          // const to = parse(metadata?.email as string, workflowRunMetadata);
-          // const subject = parse(
-          //   metadata?.subject as string,
-          //   workflowRunMetadata,
-          // );
+          // Use fallbacks so parse never receives undefined
+          const body = parse(metadata?.body || "", workflowRunMetadata);
+          const to = parse(metadata?.email || "", workflowRunMetadata);
+          const subject = parse(metadata?.subject || "", workflowRunMetadata);
 
-          // console.log(`Sending email to ${to}`);
-          // console.log(`Subject: ${subject}`);
-          // console.log(`Body: ${body}`);
-
-          // await sendEmail(to, subject, body);
-          console.log("Email sent successfully!");
+          console.log(`Sending email to ${to}`);
+          console.log(`Subject: ${subject}`);
+          console.log(`Body: ${body}`);
+          console.log(
+            `Sending email to ${to}, subject: ${subject}, body: ${body}`,
+          );
+          await sendEmail(to, subject, body);
         }
 
         await new Promise((r) => setTimeout(r, 500));
@@ -175,4 +173,4 @@ async function main() {
   });
 }
 
-main().catch(console.error);
+main();

@@ -180,12 +180,12 @@ importers:
 
   apps/workers:
     dependencies:
-      '@types':
-        specifier: link:nodemailer/@types
-        version: link:nodemailer/@types
       '@types/express':
         specifier: ^5.0.6
         version: 5.0.6
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       express:
         specifier: ^5.2.1
         version: 5.2.1
@@ -208,6 +208,9 @@ importers:
       '@types/json-templates':
         specifier: ^3.0.3
         version: 3.0.3
+      '@types/node':
+        specifier: ^22.19.3
+        version: 22.19.3
 
   packages/db:
     dependencies:
