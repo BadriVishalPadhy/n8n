@@ -2,7 +2,8 @@
 import { Kafka } from "kafkajs";
 import { prismaClient } from "@repo/db";
 import { parse } from "./parse";
-import { sendEmail } from "./email"; // You'll need to create this
+import { sendEmail } from "./email";
+import { sendTelegram } from "./telegram";
 
 const kafka = new Kafka({
   clientId: "my-app",
@@ -102,29 +103,34 @@ async function main() {
           return;
         }
 
-        // This is the runtime data from the trigger event (zapRunMetadata equivalent)
+        // This is the runtime data from the trigger event
         const workflowRunMetadata = availableActions.meta || {};
 
         console.log(`Executing stage ${stage}: ${currentAction.type.name}`);
 
-        //Email---------------------------------------------------------------------------------------
+        // ── Email Action ─────────────────────────────────────────────────
         if (currentAction.type.id === "email") {
           const metadata = currentAction.metadata as any;
 
-          console.log("workflowRunMetadata", workflowRunMetadata);
-
-          // Use fallbacks so parse never receives undefined
           const body = parse(metadata?.body || "", workflowRunMetadata);
           const to = parse(metadata?.email || "", workflowRunMetadata);
           const subject = parse(metadata?.subject || "", workflowRunMetadata);
 
-          console.log(`Sending email to ${to}`);
-          console.log(`Subject: ${subject}`);
-          console.log(`Body: ${body}`);
           console.log(
             `Sending email to ${to}, subject: ${subject}, body: ${body}`,
           );
           await sendEmail(to, subject, body);
+        }
+
+        // ── Telegram Action ──────────────────────────────────────────────
+        if (currentAction.type.id === "telegram") {
+          const metadata = currentAction.metadata as any;
+
+          const chatId = parse(metadata?.chatId || "", workflowRunMetadata);
+          const message = parse(metadata?.message || "", workflowRunMetadata);
+
+          console.log(`Sending Telegram to chat ${chatId}: ${message}`);
+          await sendTelegram(chatId, message);
         }
 
         await new Promise((r) => setTimeout(r, 500));

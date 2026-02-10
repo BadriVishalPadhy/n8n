@@ -9,12 +9,14 @@ import {
   useEdgesState,
   addEdge,
   BackgroundVariant,
+  ConnectionLineType,
   Panel,
-  Node,
-  Edge,
-  Connection,
+  type Node,
+  type Edge,
+  type Connection,
   Handle,
   Position,
+  type NodeProps,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import {
@@ -29,11 +31,26 @@ import {
   Loader2,
   Save,
   PlayCircle,
+  GitBranch,
+  Send,
+  type LucideIcon,
 } from "lucide-react";
-import axios from "axios";
+import axios, { type AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
-const iconMap = {
+// ── Icon Map ───────────────────────────────────────────────────────────────────
+
+type IconKey =
+  | "webhook"
+  | "email"
+  | "database"
+  | "schedule"
+  | "file"
+  | "api"
+  | "sol"
+  | "telegram";
+
+const iconMap: Record<IconKey, LucideIcon> = {
   webhook: Webhook,
   email: Mail,
   database: Database,
@@ -41,22 +58,151 @@ const iconMap = {
   file: FileText,
   api: Zap,
   sol: Zap,
+  telegram: Send,
 };
+
+function NodeIcon({
+  iconId,
+  className,
+}: {
+  iconId: string;
+  className?: string;
+}) {
+  const Component = iconMap[iconId as IconKey] ?? Webhook;
+  return <Component className={className} />;
+}
+
+// ── Types ──────────────────────────────────────────────────────────────────────
 
 interface AvailableNode {
   id: string;
   name: string;
 }
 
-// Custom Node Component matching the reference image
-function CustomNode({ data, id }: any) {
-  const Icon =
-    iconMap[data.availableActionId as keyof typeof iconMap] || Webhook;
+interface CustomNodeData {
+  label: string;
+  subtitle: string;
+  type: "trigger" | "action";
+  availableActionId: string;
+  metadata: Record<string, string>;
+  childCount: number;
+  onDelete: () => void;
+  onAdd: () => void;
+  [key: string]: unknown;
+}
+
+type CustomNodeType = Node<CustomNodeData, "custom">;
+
+// ── Constants ──────────────────────────────────────────────────────────────────
+
+const EDGE_STYLE = {
+  stroke: "#6b7280",
+  strokeWidth: 2,
+  strokeDasharray: "5, 5",
+} as const;
+
+const NODE_GAP_X = 350;
+const NODE_GAP_Y = 220;
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+
+function createEdge(sourceId: string, targetId: string): Edge {
+  return {
+    id: `edge-${sourceId}-${targetId}`,
+    source: sourceId,
+    target: targetId,
+    animated: true,
+    type: "smoothstep",
+    style: EDGE_STYLE,
+  };
+}
+
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  const axiosErr = err as AxiosError<{ error?: string; message?: string }>;
+  return (
+    axiosErr.response?.data?.error ??
+    axiosErr.response?.data?.message ??
+    axiosErr.message ??
+    "An unknown error occurred"
+  );
+}
+
+function getChildPosition(
+  parent: CustomNodeType,
+  existingChildCount: number,
+): { x: number; y: number } {
+  const baseX = parent.position.x;
+  const baseY = parent.position.y + NODE_GAP_Y;
+
+  if (existingChildCount === 0) {
+    return { x: baseX, y: baseY };
+  }
+
+  const direction = existingChildCount % 2 === 0 ? -1 : 1;
+  const offset = Math.ceil(existingChildCount / 2) * NODE_GAP_X;
+
+  return {
+    x: baseX + direction * offset,
+    y: baseY,
+  };
+}
+
+// ── Default Metadata Templates ─────────────────────────────────────────────────
+
+function getDefaultMetadata(actionId: string): Record<string, string> {
+  switch (actionId) {
+    case "email":
+      return {
+        name: "SOL Transfer Alert",
+        email: "",
+        subject: "🚀 {solAmount} SOL Transfer Detected",
+        body: [
+          "Hi,",
+          "",
+          "A Solana transfer was detected on your monitored wallet.",
+          "",
+          "📤 From: {fromWallet}",
+          "📥 To: {toWallet}",
+          "💰 Amount: {solAmount} SOL",
+          "🔗 Signature: {signature}",
+          "📅 Time: {timestamp}",
+          "📋 Type: {type}",
+          "",
+          "— Workflow Automation",
+        ].join("\n"),
+      };
+    case "telegram":
+      return {
+        name: "SOL Transfer Notification",
+        chatId: "",
+        message: [
+          "🚀 *{solAmount} SOL Transferred*",
+          "",
+          "📤 From: `{fromWallet}`",
+          "📥 To: `{toWallet}`",
+          "📋 Type: {type}",
+          "📅 Time: {timestamp}",
+          "🔗 TX: `{signature}`",
+        ].join("\n"),
+      };
+    case "webhook":
+      return {
+        name: "Webhook Forwarder",
+        webhookUrl: "",
+      };
+    default:
+      return {};
+  }
+}
+
+// ── Custom Node Component ──────────────────────────────────────────────────────
+
+function CustomNode({ data }: NodeProps<CustomNodeType>) {
   const isStart = data.type === "trigger";
 
   return (
     <div className="relative group">
-      {/* Input Handle (top) - not shown for first node */}
       {!isStart && (
         <Handle
           type="target"
@@ -79,12 +225,13 @@ function CustomNode({ data, id }: any) {
         }
       >
         <div className="flex flex-col items-center gap-3">
-          {/* Icon Container */}
           <div className="w-16 h-16 bg-[#1B1B1B] border border-gray-600 rounded-xl flex items-center justify-center">
-            <Icon className="w-8 h-8 text-cyan-400" />
+            <NodeIcon
+              iconId={data.availableActionId}
+              className="w-8 h-8 text-cyan-400"
+            />
           </div>
 
-          {/* Node Label */}
           <div className="text-center w-full">
             <p className="text-white font-medium text-sm mb-0.5">
               {data.label}
@@ -94,7 +241,13 @@ function CustomNode({ data, id }: any) {
             </p>
           </div>
 
-          {/* Delete Button */}
+          {data.childCount > 0 && (
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 translate-y-full flex items-center gap-1 bg-zinc-800 border border-zinc-600 rounded-full px-2 py-0.5 text-[10px] text-gray-400">
+              <GitBranch className="w-3 h-3" />
+              {data.childCount}
+            </div>
+          )}
+
           <button
             onClick={data.onDelete}
             className="absolute top-2 right-2 p-1 hover:bg-gray-700 rounded transition-colors opacity-0 group-hover:opacity-100"
@@ -104,17 +257,16 @@ function CustomNode({ data, id }: any) {
         </div>
       </div>
 
-      {/* Output Handle (bottom) */}
       <Handle
         type="source"
         position={Position.Bottom}
         className="w-4 h-4 !bg-gray-400 !border-2 !border-gray-600 hover:!bg-white transition-colors"
       />
 
-      {/* Add button on right side */}
       <button
-        className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-gray-700 hover:bg-gray-600 border-2 border-gray-500 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-        onClick={() => data.onAdd && data.onAdd(id)}
+        className="absolute -right-4 top-1/2 -translate-y-1/2 w-7 h-7 bg-cyan-600 hover:bg-cyan-500 border-2 border-cyan-400 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-lg shadow-cyan-500/20"
+        onClick={data.onAdd}
+        title="Add action from this node"
       >
         <Plus className="w-4 h-4 text-white" />
       </button>
@@ -126,10 +278,12 @@ const nodeTypes = {
   custom: CustomNode,
 };
 
+// ── Main Component ─────────────────────────────────────────────────────────────
+
 export default function WorkflowBuilder() {
   const router = useRouter();
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<CustomNodeType>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarType, setSidebarType] = useState<"trigger" | "action">(
     "trigger",
@@ -140,7 +294,8 @@ export default function WorkflowBuilder() {
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AvailableNode | null>(null);
-  const [metadata, setMetadata] = useState<Record<string, any>>({});
+  const [metadata, setMetadata] = useState<Record<string, string>>({});
+  const [addAfterNodeId, setAddAfterNodeId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTriggersAndActions();
@@ -150,16 +305,7 @@ export default function WorkflowBuilder() {
     (params: Connection) => {
       setEdges((eds) =>
         addEdge(
-          {
-            ...params,
-            animated: true,
-            type: "smoothstep",
-            style: {
-              stroke: "#6b7280",
-              strokeWidth: 2,
-              strokeDasharray: "5, 5",
-            },
-          },
+          { ...params, animated: true, type: "smoothstep", style: EDGE_STYLE },
           eds,
         ),
       );
@@ -167,160 +313,233 @@ export default function WorkflowBuilder() {
     [setEdges],
   );
 
-  async function fetchTriggersAndActions() {
+  // ── Data fetching ──────────────────────────────────────────────────────────
+
+  async function fetchTriggersAndActions(): Promise<void> {
     setLoading(true);
     setError(null);
     try {
       const [triggerRes, actionRes] = await Promise.all([
-        axios.get("http://localhost:8000/api/v1/availableTrigger", {
-          withCredentials: true,
-        }),
-        axios.get("http://localhost:8000/api/v1/availableActions", {
-          withCredentials: true,
-        }),
+        axios.get<{ value: AvailableNode[] }>(
+          "http://localhost:8000/api/v1/availableTrigger",
+          { withCredentials: true },
+        ),
+        axios.get<{ availableActionNodes: AvailableNode[] }>(
+          "http://localhost:8000/api/v1/availableActions",
+          { withCredentials: true },
+        ),
       ]);
-
-      setTriggers(triggerRes.data.value || []);
-      setActions(actionRes.data.availableActionNodes || []);
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
+      setTriggers(triggerRes.data.value ?? []);
+      setActions(actionRes.data.availableActionNodes ?? []);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
   }
 
-  function addTriggerDirectly(item: AvailableNode) {
-    const nodeId = `node-${Date.now()}`;
-    const isFirstNode = nodes.length === 0;
-    const lastNode = nodes.length > 0 ? nodes[nodes.length - 1] : null;
+  // ── Count children ─────────────────────────────────────────────────────────
 
-    const newNode: any = {
+  function countChildren(nodeId: string): number {
+    return edges.filter((e) => e.source === nodeId).length;
+  }
+
+  // ── Handle + button click on a node ────────────────────────────────────────
+
+  function handleAddFromNode(nodeId: string): void {
+    setAddAfterNodeId(nodeId);
+    setSidebarType("action");
+    setSidebarOpen(true);
+  }
+
+  // ── Build node data ────────────────────────────────────────────────────────
+
+  function buildNodeData(
+    nodeId: string,
+    item: AvailableNode,
+    nodeType: "trigger" | "action",
+    meta: Record<string, string>,
+    childCount: number,
+  ): CustomNodeData {
+    return {
+      label: item.name,
+      subtitle: meta.name || nodeType,
+      type: nodeType,
+      availableActionId: item.id,
+      metadata: meta,
+      childCount,
+      onDelete: () => deleteNode(nodeId),
+      onAdd: () => handleAddFromNode(nodeId),
+    };
+  }
+
+  // ── Refresh child counts ───────────────────────────────────────────────────
+
+  function refreshChildCounts(): void {
+    setNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          childCount: edges.filter((e) => e.source === node.id).length,
+        },
+      })),
+    );
+  }
+
+  // ── Add trigger ────────────────────────────────────────────────────────────
+
+  function addTriggerDirectly(item: AvailableNode): void {
+    const nodeId = `node-${Date.now()}`;
+
+    const newNode: CustomNodeType = {
       id: nodeId,
       type: "custom",
-      position: {
-        x: isFirstNode ? 300 : (lastNode?.position.x ?? 300) + 350,
-        y: isFirstNode ? 100 : (lastNode?.position.y ?? 100),
-      },
-      data: {
-        label: item.name,
-        subtitle: "trigger",
-        type: "trigger",
-        availableActionId: item.id,
-        metadata: {},
-        onDelete: () => deleteNode(nodeId),
-      },
+      position: { x: 400, y: 80 },
+      data: buildNodeData(nodeId, item, "trigger", {}, 0),
     };
 
-    setNodes((nds: any) => [...nds, newNode]);
-
-    if (lastNode) {
-      const newEdge: Edge = {
-        id: `edge-${lastNode.id}-${nodeId}`,
-        source: lastNode.id,
-        target: nodeId,
-        animated: true,
-        type: "smoothstep",
-        style: {
-          stroke: "#6b7280",
-          strokeWidth: 2,
-          strokeDasharray: "5, 5",
-        },
-      };
-      setEdges((eds) => [...eds, newEdge]);
-    }
-
+    setNodes((nds) => [...nds, newNode]);
     setSidebarOpen(false);
+    setAddAfterNodeId(null);
     setSidebarType("action");
   }
 
-  function openModal(item: AvailableNode) {
-    // Triggers don't need a modal — add directly
+  // ── Sidebar item click — pre-fills with smart defaults ─────────────────────
+
+  function handleSidebarItemClick(item: AvailableNode): void {
     if (sidebarType === "trigger") {
       addTriggerDirectly(item);
       return;
     }
-
-    // Actions open the modal for configuration
     setSelectedItem(item);
-    setMetadata({});
+    setMetadata(getDefaultMetadata(item.id));
     setSidebarOpen(false);
     setModalOpen(true);
   }
 
-  function deleteNode(nodeId: string) {
-    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+  // ── Delete node ────────────────────────────────────────────────────────────
+
+  function deleteNode(nodeId: string): void {
+    setNodes((nds) => nds.filter((n) => n.id !== nodeId));
     setEdges((eds) =>
-      eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId),
+      eds.filter((e) => e.source !== nodeId && e.target !== nodeId),
     );
+    setTimeout(refreshChildCounts, 0);
   }
 
-  function addNodeFromModal() {
+  // ── Add action node from modal ─────────────────────────────────────────────
+
+  function addNodeFromModal(): void {
     if (!selectedItem) return;
 
     const nodeId = `node-${Date.now()}`;
-    const isFirstNode = nodes.length === 0;
-    const lastNode = nodes.length > 0 ? nodes[nodes.length - 1] : null;
 
-    const newNode: any = {
+    const parentNode = addAfterNodeId
+      ? (nodes.find((n) => n.id === addAfterNodeId) ?? null)
+      : nodes.length > 0
+        ? (nodes[nodes.length - 1] ?? null)
+        : null;
+
+    let position: { x: number; y: number };
+    if (parentNode) {
+      const existingChildren = countChildren(parentNode.id);
+      position = getChildPosition(parentNode, existingChildren);
+    } else {
+      position = { x: 400, y: 80 };
+    }
+
+    const newNode: CustomNodeType = {
       id: nodeId,
       type: "custom",
-      position: {
-        x: isFirstNode ? 300 : (lastNode?.position.x ?? 300) + 350,
-        y: isFirstNode ? 100 : (lastNode?.position.y ?? 100),
-      },
-      data: {
-        label: selectedItem.name,
-        subtitle: metadata.name || sidebarType,
-        type: sidebarType,
-        availableActionId: selectedItem.id,
-        metadata: metadata,
-        onDelete: () => deleteNode(nodeId),
-      },
+      position,
+      data: buildNodeData(nodeId, selectedItem, "action", metadata, 0),
     };
 
-    setNodes((nds: any) => [...nds, newNode]);
+    setNodes((nds) => {
+      const updated = [...nds, newNode];
+      if (parentNode) {
+        return updated.map((n) =>
+          n.id === parentNode.id
+            ? {
+                ...n,
+                data: {
+                  ...n.data,
+                  childCount: countChildren(parentNode.id) + 1,
+                },
+              }
+            : n,
+        );
+      }
+      return updated;
+    });
 
-    // Auto-connect to previous node
-    if (lastNode) {
-      const newEdge: Edge = {
-        id: `edge-${lastNode.id}-${nodeId}`,
-        source: lastNode.id,
-        target: nodeId,
-        animated: true,
-        type: "smoothstep",
-        style: {
-          stroke: "#6b7280",
-          strokeWidth: 2,
-          strokeDasharray: "5, 5",
-        },
-      };
-      setEdges((eds) => [...eds, newEdge]);
+    if (parentNode) {
+      setEdges((eds) => [...eds, createEdge(parentNode.id, nodeId)]);
     }
 
     setModalOpen(false);
     setSelectedItem(null);
     setMetadata({});
-    setSidebarOpen(true);
-    setSidebarType("action");
+    setAddAfterNodeId(null);
   }
 
-  async function saveWorkflow() {
-    const triggerNode = nodes.find((n: any) => n.data.type === "trigger");
-    const actionNodes = nodes.filter((n: any) => n.data.type === "action");
+  // ── Save workflow ──────────────────────────────────────────────────────────
+
+  async function saveWorkflow(): Promise<void> {
+    const triggerNode = nodes.find((n) => n.data.type === "trigger");
+    const actionNodes = nodes.filter((n) => n.data.type === "action");
 
     if (!triggerNode) {
       alert("Please add a trigger first!");
       return;
     }
 
+    if (actionNodes.length === 0) {
+      alert("Please add at least one action!");
+      return;
+    }
+
+    const childrenMap = new Map<string, string[]>();
+    for (const edge of edges) {
+      const existing = childrenMap.get(edge.source) ?? [];
+      existing.push(edge.target);
+      childrenMap.set(edge.source, existing);
+    }
+
+    const orderedActionIds: string[] = [];
+    const queue = [triggerNode.id];
+    const visited = new Set<string>();
+
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      if (visited.has(current)) continue;
+      visited.add(current);
+
+      const node = nodes.find((n) => n.id === current);
+      if (node && node.data.type === "action") {
+        orderedActionIds.push(current);
+      }
+
+      const children = childrenMap.get(current) ?? [];
+      for (const childId of children) {
+        if (!visited.has(childId)) {
+          queue.push(childId);
+        }
+      }
+    }
+
     const payload = {
-      availableTriggerId: (triggerNode as any).data.availableActionId,
-      triggerMeta: (triggerNode as any).data.metadata,
-      actions: actionNodes.map((action: any, index) => ({
-        availableActionId: action.data.availableActionId,
-        actionMeta: action.data.metadata,
-        sortingOrder: index,
-      })),
+      availableTriggerId: triggerNode.data.availableActionId,
+      triggerMeta: triggerNode.data.metadata,
+      actions: orderedActionIds.map((id, index) => {
+        const node = nodes.find((n) => n.id === id)!;
+        return {
+          availableActionId: node.data.availableActionId,
+          actionMeta: node.data.metadata,
+          sortingOrder: index,
+        };
+      }),
     };
 
     try {
@@ -329,21 +548,50 @@ export default function WorkflowBuilder() {
       });
       alert("Workflow saved successfully!");
       router.push("/dashboard");
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        err.message ||
-        "Failed to save workflow";
-      alert(`Error saving workflow: ${errorMessage}`);
+    } catch (err: unknown) {
+      alert(`Error saving workflow: ${getErrorMessage(err)}`);
     }
   }
 
+  // ── Close helpers ──────────────────────────────────────────────────────────
+
+  function closeSidebar(): void {
+    setSidebarOpen(false);
+    setAddAfterNodeId(null);
+  }
+
+  function closeModal(): void {
+    setModalOpen(false);
+    setSelectedItem(null);
+    setAddAfterNodeId(null);
+  }
+
+  // ── Derived state ──────────────────────────────────────────────────────────
+
   const currentItems = sidebarType === "trigger" ? triggers : actions;
+  const hasTrigger = nodes.some((n) => n.data.type === "trigger");
+  const parentNodeLabel = addAfterNodeId
+    ? nodes.find((n) => n.id === addAfterNodeId)?.data.label
+    : null;
+
+  // ── Available template variables info ──────────────────────────────────────
+
+  const templateVariables = [
+    { key: "fromWallet", desc: "Sender wallet address" },
+    { key: "toWallet", desc: "Receiver wallet address" },
+    { key: "solAmount", desc: "SOL amount" },
+    { key: "signature", desc: "Transaction signature" },
+    { key: "type", desc: "Transaction type" },
+    { key: "timestamp", desc: "Date & time" },
+    { key: "lamports", desc: "Raw lamport amount" },
+    { key: "tokenAmount", desc: "SPL token amount" },
+    { key: "tokenMint", desc: "Token mint address" },
+  ];
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="w-full h-screen bg-[#1B1B1B] flex relative">
-      {/* Main Canvas */}
       <div className="flex-1 relative">
         <ReactFlow
           nodes={nodes}
@@ -357,18 +605,14 @@ export default function WorkflowBuilder() {
           defaultEdgeOptions={{
             animated: true,
             type: "smoothstep",
-            style: {
-              stroke: "#6b7280",
-              strokeWidth: 2,
-              strokeDasharray: "5, 5",
-            },
+            style: EDGE_STYLE,
           }}
           connectionLineStyle={{
             stroke: "#6b7280",
             strokeWidth: 2,
             strokeDasharray: "5, 5",
           }}
-          connectionLineType="smoothstep"
+          connectionLineType={ConnectionLineType.SmoothStep}
         >
           <Background
             variant={BackgroundVariant.Dots}
@@ -405,13 +649,14 @@ export default function WorkflowBuilder() {
             )}
             <button
               onClick={() => {
-                setSidebarType(nodes.length === 0 ? "trigger" : "action");
+                setAddAfterNodeId(null);
+                setSidebarType(hasTrigger ? "action" : "trigger");
                 setSidebarOpen(true);
               }}
               className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center gap-2 shadow-lg border border-gray-600"
             >
               <Plus className="w-4 h-4" />
-              Add {nodes.length === 0 ? "Trigger" : "Action"}
+              Add {hasTrigger ? "Action" : "Trigger"}
             </button>
           </Panel>
 
@@ -430,6 +675,7 @@ export default function WorkflowBuilder() {
                 </p>
                 <button
                   onClick={() => {
+                    setAddAfterNodeId(null);
                     setSidebarType("trigger");
                     setSidebarOpen(true);
                   }}
@@ -444,18 +690,26 @@ export default function WorkflowBuilder() {
         </ReactFlow>
       </div>
 
-      {/* Sidebar */}
+      {/* ── Sidebar ──────────────────────────────────────────────────────── */}
       <div
         className={`fixed top-0 right-0 h-full w-96 bg-zinc-900 border-l border-zinc-700 shadow-2xl transform transition-transform duration-300 z-50 ${
           sidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between p-6 border-b border-zinc-700">
-          <h2 className="text-xl font-semibold text-white">
-            Select {sidebarType === "trigger" ? "Trigger" : "Action"}
-          </h2>
+          <div>
+            <h2 className="text-xl font-semibold text-white">
+              Select {sidebarType === "trigger" ? "Trigger" : "Action"}
+            </h2>
+            {parentNodeLabel && (
+              <p className="text-cyan-400 text-xs mt-1 flex items-center gap-1">
+                <GitBranch className="w-3 h-3" />
+                Branching from &ldquo;{parentNodeLabel}&rdquo;
+              </p>
+            )}
+          </div>
           <button
-            onClick={() => setSidebarOpen(false)}
+            onClick={closeSidebar}
             className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
           >
             <X className="w-5 h-5 text-gray-400" />
@@ -485,28 +739,29 @@ export default function WorkflowBuilder() {
           )}
           {!loading &&
             !error &&
-            currentItems.map((item) => {
-              const Icon = iconMap[item.id as keyof typeof iconMap] || Webhook;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => openModal(item)}
-                  className="w-full p-4 bg-zinc-800 hover:bg-zinc-750 border border-zinc-700 hover:border-gray-500 rounded-xl transition-all flex items-center gap-4"
-                >
-                  <div className="w-12 h-12 bg-[#1B1B1B] border border-gray-600 rounded-lg flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-cyan-400" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-white font-medium">{item.name}</p>
-                    <p className="text-gray-400 text-sm">
-                      {sidebarType === "trigger"
-                        ? "Click to add"
-                        : "Configure and add"}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
+            currentItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleSidebarItemClick(item)}
+                className="w-full p-4 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-cyan-500/50 rounded-xl transition-all flex items-center gap-4 group/item"
+              >
+                <div className="w-12 h-12 bg-[#1B1B1B] border border-gray-600 group-hover/item:border-cyan-500/50 rounded-lg flex items-center justify-center transition-colors">
+                  <NodeIcon
+                    iconId={item.id}
+                    className="w-6 h-6 text-cyan-400"
+                  />
+                </div>
+                <div className="text-left flex-1">
+                  <p className="text-white font-medium">{item.name}</p>
+                  <p className="text-gray-400 text-sm">
+                    {sidebarType === "trigger"
+                      ? "Click to add"
+                      : "Configure and add"}
+                  </p>
+                </div>
+                <Plus className="w-4 h-4 text-gray-600 group-hover/item:text-cyan-400 transition-colors" />
+              </button>
+            ))}
         </div>
       </div>
 
@@ -514,53 +769,51 @@ export default function WorkflowBuilder() {
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-          onClick={() => setSidebarOpen(false)}
+          onClick={closeSidebar}
         />
       )}
 
-      {/* Modal — only shown for actions, never for triggers */}
+      {/* ── Modal ────────────────────────────────────────────────────────── */}
       {modalOpen && selectedItem && (
         <div className="fixed inset-0 flex items-center justify-center z-[60]">
           <div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            onClick={() => {
-              setModalOpen(false);
-              setSelectedItem(null);
-              setSidebarOpen(true);
-            }}
+            onClick={closeModal}
           />
-          <div className="relative bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl w-[500px] max-h-[600px] overflow-hidden">
+          <div className="relative bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl w-[520px] max-h-[700px] overflow-hidden">
+            {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-zinc-700">
               <div className="flex items-center gap-4">
-                {(() => {
-                  const Icon =
-                    iconMap[selectedItem.id as keyof typeof iconMap] || Webhook;
-                  return (
-                    <div className="w-12 h-12 bg-[#1B1B1B] border border-gray-600 rounded-lg flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-cyan-400" />
-                    </div>
-                  );
-                })()}
+                <div className="w-12 h-12 bg-[#1B1B1B] border border-gray-600 rounded-lg flex items-center justify-center">
+                  <NodeIcon
+                    iconId={selectedItem.id}
+                    className="w-6 h-6 text-cyan-400"
+                  />
+                </div>
                 <div>
                   <h2 className="text-xl font-semibold text-white">
                     {selectedItem.name}
                   </h2>
-                  <p className="text-gray-400 text-sm">Configure action</p>
+                  <p className="text-gray-400 text-sm">
+                    {parentNodeLabel ? (
+                      <>Branching from &ldquo;{parentNodeLabel}&rdquo;</>
+                    ) : (
+                      "Configure action"
+                    )}
+                  </p>
                 </div>
               </div>
               <button
-                onClick={() => {
-                  setModalOpen(false);
-                  setSelectedItem(null);
-                  setSidebarOpen(true);
-                }}
+                onClick={closeModal}
                 className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
               >
                 <X className="w-5 h-5 text-gray-400" />
               </button>
             </div>
-            <div className="p-6 space-y-4 overflow-y-auto max-h-[400px]">
-              {/* Common name field */}
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-4 overflow-y-auto max-h-[450px]">
+              {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Name
@@ -568,15 +821,15 @@ export default function WorkflowBuilder() {
                 <input
                   type="text"
                   placeholder={`Enter ${selectedItem.name} name`}
-                  value={metadata.name || ""}
+                  value={metadata.name ?? ""}
                   onChange={(e) =>
                     setMetadata({ ...metadata, name: e.target.value })
                   }
-                  className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                 />
               </div>
 
-              {/* Email-specific fields */}
+              {/* ── Email fields ────────────────────────────────────────── */}
               {selectedItem.id === "email" && (
                 <>
                   <div>
@@ -585,12 +838,12 @@ export default function WorkflowBuilder() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. {email} or user@example.com"
-                      value={metadata.email || ""}
+                      placeholder="e.g. user@example.com"
+                      value={metadata.email ?? ""}
                       onChange={(e) =>
                         setMetadata({ ...metadata, email: e.target.value })
                       }
-                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                     />
                   </div>
                   <div>
@@ -599,12 +852,11 @@ export default function WorkflowBuilder() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Payment received for {userName}"
-                      value={metadata.subject || ""}
+                      value={metadata.subject ?? ""}
                       onChange={(e) =>
                         setMetadata({ ...metadata, subject: e.target.value })
                       }
-                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                     />
                   </div>
                   <div>
@@ -612,19 +864,55 @@ export default function WorkflowBuilder() {
                       Body
                     </label>
                     <textarea
-                      placeholder="e.g. Hello {userName}, your payment of {amount} was received!"
-                      value={metadata.body || ""}
+                      value={metadata.body ?? ""}
                       onChange={(e) =>
                         setMetadata({ ...metadata, body: e.target.value })
                       }
-                      rows={4}
-                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 resize-none"
+                      rows={6}
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none font-mono text-sm"
                     />
                   </div>
                 </>
               )}
 
-              {/* Webhook-specific fields */}
+              {/* ── Telegram fields ───────────��─────────────────────────── */}
+              {selectedItem.id === "telegram" && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Chat ID
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 987654321"
+                      value={metadata.chatId ?? ""}
+                      onChange={(e) =>
+                        setMetadata({ ...metadata, chatId: e.target.value })
+                      }
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                    />
+                    <p className="text-gray-500 text-xs mt-1">
+                      Send /start to your bot, then call getUpdates to find your
+                      chat ID
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Message
+                    </label>
+                    <textarea
+                      value={metadata.message ?? ""}
+                      onChange={(e) =>
+                        setMetadata({ ...metadata, message: e.target.value })
+                      }
+                      rows={6}
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none font-mono text-sm"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* ── Webhook fields ──────────────────────────────────────── */}
               {selectedItem.id === "webhook" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -633,45 +921,74 @@ export default function WorkflowBuilder() {
                   <input
                     type="url"
                     placeholder="https://example.com/webhook"
-                    value={metadata.webhookUrl || ""}
+                    value={metadata.webhookUrl ?? ""}
                     onChange={(e) =>
                       setMetadata({ ...metadata, webhookUrl: e.target.value })
                     }
-                    className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                    className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   />
                 </div>
               )}
 
-              {/* Description — optional for all actions */}
+              {/* ── Available Variables Reference ───────────────────────── */}
+              {(selectedItem.id === "email" ||
+                selectedItem.id === "telegram") && (
+                <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
+                  <p className="text-xs font-medium text-gray-400 mb-2">
+                    📋 Available template variables (auto-filled from trigger
+                    data):
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {templateVariables.map((v) => (
+                      <button
+                        key={v.key}
+                        type="button"
+                        title={v.desc}
+                        onClick={() => {
+                          // Copy variable to clipboard for easy pasting
+                          navigator.clipboard.writeText(`{${v.key}}`);
+                        }}
+                        className="px-2 py-0.5 bg-zinc-700 hover:bg-cyan-600/20 border border-zinc-600 hover:border-cyan-500/50 rounded text-xs text-cyan-400 font-mono transition-colors cursor-pointer"
+                      >
+                        {`{${v.key}}`}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-gray-500 mt-2">
+                    Click any variable to copy it. These are auto-extracted from
+                    incoming Solana transactions.
+                  </p>
+                </div>
+              )}
+
+              {/* Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Description (Optional)
                 </label>
                 <textarea
                   placeholder="Add a description..."
-                  value={metadata.description || ""}
+                  value={metadata.description ?? ""}
                   onChange={(e) =>
                     setMetadata({ ...metadata, description: e.target.value })
                   }
-                  rows={3}
-                  className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 resize-none"
+                  rows={2}
+                  className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none"
                 />
               </div>
             </div>
+
+            {/* Modal Footer */}
             <div className="flex items-center justify-end gap-3 p-6 border-t border-zinc-700">
               <button
-                onClick={() => {
-                  setModalOpen(false);
-                  setSelectedItem(null);
-                  setSidebarOpen(true);
-                }}
+                onClick={closeModal}
                 className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={addNodeFromModal}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors border border-gray-600"
+                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg transition-colors shadow-lg shadow-cyan-500/20"
               >
                 Add to Workflow
               </button>
